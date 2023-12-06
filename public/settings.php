@@ -65,7 +65,10 @@ $newscategories = $db->select_newscategories();
                 </div>
                 <div id="search" class="mb-5">
                     <h4>Recherche</h4>
-                    <p>Sélectionnez le moteur de recherche à afficher sur votre portail.</p>
+                    <p>
+                        Sélectionnez le moteur de recherche à afficher sur votre portail.<br>
+                        Ce paramètre sera aussi utilisé lorsque vous cliquerez sur un sujet mis en lumière.
+                    </p>
                     <?php foreach ($searchengines as $engine) : ?>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="set_searchengine" id="<?= $engine['uuid'] ?>-search-radio" value="<?= $engine['uuid'] ?>" <?php if ($user['set_searchengine'] == $engine['uuid']) echo 'checked' ?>>
