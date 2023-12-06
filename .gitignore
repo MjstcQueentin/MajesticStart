@@ -1,0 +1,9 @@
+# Configuration file
+config/config.php
+
+# VS Code artefacts
+.vscode
+
+# Generated files
+engine/raw-xml-cache/*.xml
+engine/aggregator-cache/*.json

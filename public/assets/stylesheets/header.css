@@ -1,0 +1,9 @@
+header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+body[data-bs-theme="dark"] header img {
+    filter: brightness(0) invert(100);
+}
