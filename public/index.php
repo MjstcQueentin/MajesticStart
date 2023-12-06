@@ -223,7 +223,7 @@ foreach ($categories as $category_key => $category) {
                     <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $settings['photo_place'] ?>
                 </a>
                 <?php foreach ($topics as $topic) : ?>
-                    <a class="btn btn-sm btn-light" target="_blank" rel="noopener noreferrer" href="<?= str_contains($topic["link_or_query"], "https://") ? $topic["link_or_query"] : ($searchengine["result_url"] . urlencode($topic["link_or_query"])) ?>">
+                    <a class="btn btn-sm btn-light" target="_blank" rel="noopener noreferrer" href="<?= str_contains($topic["link_or_query"], "https://") ? $topic["link_or_query"] : ($searchengine["result_url"] . "?" . $searchengine["query_param"] . "=" . urlencode($topic["link_or_query"])) ?>">
                         <?php if ($topic["is_official"] == 1) : ?>
                             <i class="bi bi-patch-check-fill" title="Source officielle"></i><span class="visually-hidden">Source officielle</span>
                         <?php elseif ($topic["is_featured"] == 1) : ?>
