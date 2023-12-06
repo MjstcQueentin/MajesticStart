@@ -123,27 +123,28 @@ CREATE TABLE `searchengine` (
   `uuid` varchar(36) NOT NULL,
   `name` varchar(64) NOT NULL,
   `icon` text,
-  `result_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+  `result_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `query_param` varchar(16) DEFAULT 'q'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `searchengine`
 --
 
-INSERT INTO `searchengine` (`uuid`, `name`, `icon`, `result_url`) VALUES
-('1623d0f1-8e41-11ee-b37c-00155de63b7d', 'X', '/assets/logos/twitter.png', 'https://twitter.com/search?q='),
-('1623d757-8e41-11ee-b37c-00155de63b7d', 'Yahoo', '/assets/logos/yahoo.png', 'https://fr.search.yahoo.com/search?p='),
-('1ec8e0df-8e44-11ee-b37c-00155de63b7d', 'Startpage', '/assets/logos/startpage.png', 'https://www.startpage.com/sp/search?q='),
-('79ae1763-8e40-11ee-b37c-00155de63b7d', 'Google', '/assets/logos/google.png', 'https://www.google.com/search?q='),
-('8296b5e8-8e41-11ee-b37c-00155de63b7d', 'Ecosia', '/assets/logos/ecosia.png', 'https://www.ecosia.org/search?method=index&q='),
-('8296bc56-8e41-11ee-b37c-00155de63b7d', 'Lilo', '/assets/logos/lilo.png', 'https://search.lilo.org/?q='),
-('8296c27c-8e41-11ee-b37c-00155de63b7d', 'Wikipedia', '/assets/logos/wikipedia.png', 'https://fr.wikipedia.org/w/index.php?search='),
-('8296c81c-8e41-11ee-b37c-00155de63b7d', 'YouTube', '/assets/logos/youtube.png', 'https://www.youtube.com/results?search_query='),
-('90550ccd-8e40-11ee-b37c-00155de63b7d', 'Bing', '/assets/logos/bing.png', 'https://www.bing.com/search?q='),
-('905512fb-8e40-11ee-b37c-00155de63b7d', 'DuckDuckGo', '/assets/logos/duckduckgo.png', 'https://duckduckgo.com/?t=h_&q='),
-('c2e270e4-8c71-11ee-88aa-00155d5b8d37', 'Qwant', '/assets/logos/qwant.png', 'https://www.qwant.com/?t=web&q='),
-('d2045a04-8e40-11ee-b37c-00155de63b7d', 'Brave Search', '/assets/logos/brave.png', 'https://search.brave.com/search?q='),
-('d204601c-8e40-11ee-b37c-00155de63b7d', 'The Internet Archive', '/assets/logos/archive.png', 'https://archive.org/search?query=');
+INSERT INTO `searchengine` (`uuid`, `name`, `icon`, `result_url`, `query_param`) VALUES
+('1623d0f1-8e41-11ee-b37c-00155de63b7d', 'X', '/assets/logos/twitter.png', 'https://twitter.com/search', 'q'),
+('1623d757-8e41-11ee-b37c-00155de63b7d', 'Yahoo', '/assets/logos/yahoo.png', 'https://fr.search.yahoo.com/search', 'q'),
+('1ec8e0df-8e44-11ee-b37c-00155de63b7d', 'Startpage', '/assets/logos/startpage.png', 'https://www.startpage.com/sp/search', 'q'),
+('79ae1763-8e40-11ee-b37c-00155de63b7d', 'Google', '/assets/logos/google.png', 'https://www.google.com/search', 'q'),
+('8296b5e8-8e41-11ee-b37c-00155de63b7d', 'Ecosia', '/assets/logos/ecosia.png', 'https://www.ecosia.org/search', 'q'),
+('8296bc56-8e41-11ee-b37c-00155de63b7d', 'Lilo', '/assets/logos/lilo.png', 'https://search.lilo.org/', 'q'),
+('8296c27c-8e41-11ee-b37c-00155de63b7d', 'Wikipedia', '/assets/logos/wikipedia.png', 'https://fr.wikipedia.org/w/index.php', 'search'),
+('8296c81c-8e41-11ee-b37c-00155de63b7d', 'YouTube', '/assets/logos/youtube.png', 'https://www.youtube.com/results', 'search_query'),
+('90550ccd-8e40-11ee-b37c-00155de63b7d', 'Bing', '/assets/logos/bing.png', 'https://www.bing.com/search', 'q'),
+('905512fb-8e40-11ee-b37c-00155de63b7d', 'DuckDuckGo', '/assets/logos/duckduckgo.png', 'https://duckduckgo.com/', 'q'),
+('c2e270e4-8c71-11ee-88aa-00155d5b8d37', 'Qwant', '/assets/logos/qwant.png', 'https://www.qwant.com/', 'q'),
+('d2045a04-8e40-11ee-b37c-00155de63b7d', 'Brave Search', '/assets/logos/brave.png', 'https://search.brave.com/search', 'q'),
+('d204601c-8e40-11ee-b37c-00155de63b7d', 'The Internet Archive', '/assets/logos/archive.png', 'https://archive.org/search', 'query');
 
 -- --------------------------------------------------------
 

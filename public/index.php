@@ -211,7 +211,7 @@ foreach ($categories as $category_key => $category) {
                     <span class="input-group-text bg-body border-end-0" id="provider-logo">
                         <img src="<?= $searchengine["icon"] ?>" alt="<?= $searchengine["name"] ?>" height="24">
                     </span>
-                    <input type="text" autofocus required class="form-control border-start-0 border-end-0" placeholder="Rechercher avec <?= $searchengine["name"] ?>" aria-label="Termes de recherches" aria-describedby="provider-logo">
+                    <input type="text" name="<?= $searchengine["query_param"] ?>" autofocus required class="form-control border-start-0 border-end-0" placeholder="Rechercher avec <?= $searchengine["name"] ?>" aria-label="Termes de recherches" aria-describedby="provider-logo">
                     <button class="btn btn-light border-top border-bottom border-end" type="submit" aria-label="Lancer la recherche"><i class="bi bi-search"></i></button>
                 </div>
             </form>
