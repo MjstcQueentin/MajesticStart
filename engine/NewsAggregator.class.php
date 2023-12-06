@@ -144,7 +144,7 @@ class NewsAggregator
     {
         $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.json";
         if (is_file($cache_link)) {
-            return json_decode(file_get_contents($cache_link), true);
+            return json_decode(file_get_contents($cache_link), true) ?? [];
         }
 
         return [];

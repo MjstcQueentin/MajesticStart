@@ -300,7 +300,7 @@ foreach ($categories as $category_key => $category) {
         <div class="mx-5 my-4 news-block">
             <h2><?= $category["title_fr"] ?></h2>
             <?php if (empty($category["news"])) : ?>
-                <div class="alert alert-info mx-5">
+                <div class="alert alert-info">
                     Aucun titre disponible pour le moment.
                 </div>
             <?php else : ?>
