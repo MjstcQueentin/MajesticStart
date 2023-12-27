@@ -7,9 +7,6 @@
  */
 
 include(__DIR__ . "/init.php");
-set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) {
-    throw new ErrorException($errstr, $errno, 1, $errfile, $errline);
-});
 
 $db = new Database();
 

@@ -25,9 +25,14 @@ class NewsAggregator
                 CURLOPT_RETURNTRANSFER => true
             ]);
             $xml = curl_exec($ch);
-
+            
             if (curl_errno($ch) != 0) {
-                throw new RuntimeException(curl_error($ch));
+                // When the connection fails, use the cache when available
+                if (is_file($cache_link)) {
+                    $xml = file_get_contents($cache_link);
+                } else {
+                    throw new RuntimeException(curl_error($ch));
+                }
             }
             curl_close($ch);
 
@@ -51,7 +56,7 @@ class NewsAggregator
         $transformed = [];
 
         foreach ($channel_items as $item) {
-            $image_src = "";
+            $image_src = "/assets/fallback-image.png";
             if (!empty($item["enclosure"])) {
                 // Image jointe
                 if (array_key_first($item["enclosure"]) == "@attributes" && stripos($item["enclosure"]["@attributes"]["type"], "image/") !== false) {
@@ -67,21 +72,23 @@ class NewsAggregator
             } else {
                 // Chercher sur la page de destination
                 $html = file_get_contents($item['link']);
-
-                // Tenter avec OpenGraph
-                $page = new DOMDocument();
-                @$page->loadHTML($html);
-                $finder = new DOMXPath($page);
-                $spaner = $finder->query('//meta[@property="og:image"]');
-                $image_src = ($spaner !== false && $spaner->count() > 0) ? $spaner->item(0)->getAttribute('content') : "";
-
-                if (empty($image_src)) {
-                    // Tenter avec une image Wordpress
+                if (!empty($html) && $html !== false) {
                     $page = new DOMDocument();
                     @$page->loadHTML($html);
                     $finder = new DOMXPath($page);
-                    $spaner = $finder->query('//img[contains(@class, "wp-post-image")]');
-                    $image_src = ($spaner !== false && $spaner->count() > 0) ? $spaner->item(0)->getAttribute('src') : "";
+
+                    // Tenter avec OpenGraph
+                    $image_src = $finder->evaluate('string(//meta[@property="og:image"]/@content)');
+
+                    if ($image_src === false) {
+                        // Tenter avec une image Wordpress
+                        $image_src = $finder->evaluate('string(//img[contains(@class, "wp-post-image")]/@src)');
+                    }
+
+                    if ($image_src === false) {
+                        // Image de secours
+                        $image_src = "/assets/fallback-image.png";
+                    }
                 }
             }
 
@@ -93,7 +100,7 @@ class NewsAggregator
                 "source" => $source
             ];
 
-            if(count($transformed) >= $max_items) break;
+            if (count($transformed) >= $max_items) break;
         }
 
         return $transformed;
@@ -114,7 +121,7 @@ class NewsAggregator
             elseif (intval($a["pubDate"]) < intval($b["pubDate"])) return 1;
             else return 0;
         });
-        
+
         file_put_contents($cache_link, serialize($transformed_items));
 
         return $transformed_items;
