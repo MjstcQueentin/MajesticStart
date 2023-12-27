@@ -108,14 +108,14 @@ class NewsAggregator
      */
     public static function aggregate($category_uuid, &$transformed_items)
     {
-        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.json";
+        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.sd";
         usort($transformed_items, function ($a, $b) {
             if (intval($a["pubDate"]) > intval($b["pubDate"])) return -1;
             elseif (intval($a["pubDate"]) < intval($b["pubDate"])) return 1;
             else return 0;
         });
         
-        file_put_contents($cache_link, json_encode($transformed_items));
+        file_put_contents($cache_link, serialize($transformed_items));
 
         return $transformed_items;
     }
@@ -127,7 +127,7 @@ class NewsAggregator
      */
     public static function is_cached($category_uuid)
     {
-        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.json";
+        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.sd";
         if (!is_file($cache_link) || filemtime($cache_link) < (time() - (15 * 60))) {
             return false;
         }
@@ -142,9 +142,9 @@ class NewsAggregator
      */
     public static function get_cache($category_uuid)
     {
-        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.json";
+        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.sd";
         if (is_file($cache_link)) {
-            return json_decode(file_get_contents($cache_link), true) ?? [];
+            return unserialize(file_get_contents($cache_link)) ?? [];
         }
 
         return [];
