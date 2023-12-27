@@ -12,6 +12,10 @@ class OpenWeatherMap
      */
     public static function getFiveDaysForecast($lat, $lon, $lang = "fr")
     {
+        $lang = urlencode($lang);
+        $lat = urlencode($lat);
+        $lon = urlencode($lon);
+        
         $ch = curl_init("https://api.openweathermap.org/data/2.5/forecast?lang=$lang&lat=$lat&lon=$lon&units=metric&appid=" . WEATHER_APIKEY);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
