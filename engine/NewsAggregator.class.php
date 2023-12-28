@@ -41,7 +41,7 @@ class NewsAggregator
             $xml = file_get_contents($cache_link);
         }
 
-        return json_decode(json_encode(new SimpleXMLElement($xml)), true);
+        return json_decode(json_encode(new SimpleXMLElement($xml, LIBXML_NOCDATA)), true);
     }
 
     /**
