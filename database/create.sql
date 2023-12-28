@@ -100,6 +100,7 @@ CREATE TABLE `newssource` (
   `name` varchar(64) NOT NULL,
   `icon` text,
   `logo` text,
+  `logo_invertable` TINYINT(1) NOT NULL DEFAULT '1',
   `rss_feed_url` text NOT NULL,
   `homepage_url` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

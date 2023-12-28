@@ -138,7 +138,7 @@ foreach ($categories as $category_key => $category) {
         color: white !important;
     }
 
-    .news-block-root .carousel-caption img {
+    .news-block-root .carousel-caption img.invertable {
         filter: brightness(0) invert(100);
     }
 
@@ -175,7 +175,7 @@ foreach ($categories as $category_key => $category) {
         vertical-align: middle;
     }
 
-    body[data-bs-theme="dark"] .news-block-root .card-body .card-text img {
+    body[data-bs-theme="dark"] .news-block-root .card-body .card-text img.invertable {
         filter: brightness(0) invert(100);
     }
 
@@ -321,7 +321,7 @@ foreach ($categories as $category_key => $category) {
                                         <div class="carousel-caption">
                                             <h5 class="px-2"><?= $category["news"][$i]["title"] ?></h5>
                                             <div class="d-flex flex-row align-items-center justify-content-center gap-3">
-                                                <img alt="<?= $category["news"][$i]["source"]["name"] ?>" src="<?= $category["news"][$i]["source"]["logo"] ?>" height="16">
+                                                <img alt="<?= $category["news"][$i]["source"]["name"] ?>" src="<?= $category["news"][$i]["source"]["logo"] ?>" <?php if($category["news"][$i]["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?> height="16">
                                                 <span><?= to_ago_str($category["news"][$i]["pubDate"]) ?></span>
                                             </div>
                                         </div>
@@ -349,7 +349,7 @@ foreach ($categories as $category_key => $category) {
                                             <div class="card-body">
                                                 <h5 class="card-title"><?= $category["news"][$i]["title"] ?></h5>
                                                 <p class="card-text">
-                                                    <img alt="<?= $category["news"][$i]["source"]["name"] ?>" src="<?= $category["news"][$i]["source"]["logo"] ?>">
+                                                    <img alt="<?= $category["news"][$i]["source"]["name"] ?>" src="<?= $category["news"][$i]["source"]["logo"] ?>" <?php if($category["news"][$i]["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
                                                     <small class="text-body-secondary ms-1">- <?= to_ago_str($category["news"][$i]["pubDate"]) ?></small>
                                                 </p>
                                             </div>
