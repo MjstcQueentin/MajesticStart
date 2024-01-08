@@ -6,7 +6,9 @@ class Database
 
     function __construct()
     {
-        $this->pdo = new PDO("mysql:host=" . DATABASE['host'] . ";dbname=" . DATABASE['dbname'], DATABASE["user"], DATABASE["pwd"]);
+        $this->pdo = new PDO("mysql:host=" . DATABASE['host'] . ";dbname=" . DATABASE['dbname'], DATABASE["user"], DATABASE["pwd"], [
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+        ]);
     }
 
     public function select_settings()
