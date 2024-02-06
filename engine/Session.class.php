@@ -13,6 +13,9 @@ class SessionUtils
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                "X-MAJESTICLOUD-CLIENT: " . $_SERVER["REMOTE_ADDR"]
+            ],
             CURLOPT_POSTFIELDS => http_build_query([
                 "authorization_code" => $code,
                 "client_uuid" => MAJESTICLOUD_CLIENT_ID,
@@ -64,6 +67,6 @@ class SessionUtils
         if (curl_errno($ch) != 0) throw new RuntimeException(curl_error($ch));
         if (curl_getinfo($ch, CURLINFO_HTTP_CODE) >= 400) throw new RuntimeException($response);
 
-        return "data:".curl_getinfo($ch, CURLINFO_CONTENT_TYPE).";base64,".base64_encode($response);
+        return "data:" . curl_getinfo($ch, CURLINFO_CONTENT_TYPE) . ";base64," . base64_encode($response);
     }
 }
