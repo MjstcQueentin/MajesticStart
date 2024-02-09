@@ -69,4 +69,21 @@ class SessionUtils
 
         return "data:" . curl_getinfo($ch, CURLINFO_CONTENT_TYPE) . ";base64," . base64_encode($response);
     }
+
+    public static function destroy() {
+        $ch = curl_init(MAJESTICLOUD_URI . "/session/current.php");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "DELETE",
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer " . $_SESSION["token"]
+            ]
+        ]);
+        $response = curl_exec($ch);
+        if (curl_errno($ch) != 0) throw new RuntimeException(curl_error($ch));
+        if (curl_getinfo($ch, CURLINFO_HTTP_CODE) >= 400) throw new RuntimeException($response);
+
+        session_unset();
+        session_destroy();
+    }
 }
