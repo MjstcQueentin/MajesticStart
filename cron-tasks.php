@@ -2,7 +2,7 @@
 
 /**
  * Mise à jour automatique des sources d'informations dans Majestic Start
- * @copyright 2023 Quentin Pugeat
+ * @copyright 2024 Quentin Pugeat
  * @license MIT License
  */
 
