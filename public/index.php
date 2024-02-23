@@ -33,6 +33,7 @@ foreach ($categories as $category_key => $category) {
     #top {
         background-image: url('<?= $settings['photo_url'] ?>');
         background-size: cover;
+        background-position: center;
         min-height: calc(100vh - 42px);
 
         display: flex;
