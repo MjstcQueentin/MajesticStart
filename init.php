@@ -42,3 +42,22 @@ function to_ago_str($timestamp)
     $months = round($diff / 60 / 60 / 24 / 12);
     return "Il y a $months mois";
 }
+
+function to_short_ago_str($timestamp)
+{
+    $now = time();
+    $diff = $now - $timestamp;
+    if ($diff < 60) return $diff . "s";
+
+    $minutes = round($diff / 60);
+    if ($minutes < 60) return $minutes . "m";
+
+    $hours = round($diff / 60 / 60);
+    if ($hours < 24) return $hours . "h";
+
+    $days = round($diff / 60 / 60 / 24);
+    if ($days < 30) return $days . "j";
+
+    $months = round($diff / 60 / 60 / 24 / 12);
+    return "$months mois";
+}

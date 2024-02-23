@@ -115,88 +115,115 @@ foreach ($categories as $category_key => $category) {
         justify-content: center;
     }
 
-    .news-block-root {
+    .news-block-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+    }
+
+    .news-block-item {
+        display: block;
+        border-radius: 4px;
+        color: inherit;
+        text-decoration: none;
+        outline: solid 0px #aaa;
+        transition: outline 0.15s ease-out;
+    }
+
+    .news-block-item:hover {
+        outline: solid 4px #aaa;
+    }
+
+    .news-block-item-image {
+        height: 150px;
+        border-radius: 4px;
+        background-size: cover;
+    }
+
+    .news-block-item-caption {
+        padding: .75rem;
+    }
+
+    .news-block-item-caption h6 {
+        margin: 0;
+    }
+
+    .news-block-item-caption-source {
         display: flex;
         flex-direction: row;
+        align-items: middle;
+        justify-content: flex-start;
         gap: 4px;
     }
 
-    .news-block-root .carousel {
-        flex: 1;
-        max-height: 600px;
+    .news-block-item-caption-source small {
+        line-height: 1;
     }
 
-    .news-block-root .carousel-item .carousel-image {
-        min-height: 400px;
-        max-height: 400px;
-        background-size: cover;
-        background-position: center;
+    .news-block-item-caption-source img {
+        height: 14px;
     }
 
-    .news-block-root .carousel-caption {
-        background-color: rgba(0, 0, 0, .5);
-        color: white !important;
-    }
-
-    .news-block-root .carousel-caption img.invertable {
-        filter: brightness(0) invert(100);
-    }
-
-    .news-block-root .news-block-grid {
-        flex: 1;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-
-    .news-block-grid .card {
-        width: calc(50% - 2px);
-    }
-
-    .news-block-grid .card .col-md-4 {
-        border-bottom-left-radius: .25rem;
-        border-top-left-radius: .25rem;
-        background-position: center;
-        background-size: cover;
-        height: 100%;
-    }
-
-    .news-block-root .card-title {
-        font-size: 16px;
-    }
-
-    .news-block-root .card-body .card-text img {
-        height: 16px;
-        vertical-align: middle;
-    }
-
-    .news-block-root .card-body .card-text small {
-        vertical-align: middle;
-    }
-
-    body[data-bs-theme="dark"] .news-block-root .card-body .card-text img.invertable {
+    body[data-bs-theme="dark"] img.invertable {
         filter: brightness(0) invert(100);
     }
 
     /* xxl */
     @media only screen and (max-width: 1400px) {
-
-        .news-block-root .carousel-caption h5,
-        .news-block-root .card-title,
-        .news-block-root .card-text {
-            font-size: 14px;
-        }
-
-        .news-block-root .card-body .card-text img {
-            height: 14px;
+        .news-block-grid {
+            grid-template-columns: repeat(5, 1fr);
         }
     }
 
+    /* xl */
+    @media only screen and (max-width: 1200px) {
+        .news-block-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    /* lg */
+    @media only screen and (max-width: 992px) {
+        .news-block-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    /* lg */
+    @media only screen and (max-width: 768px) {
+        .news-block-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* */
     @media only screen and (max-width: 576px) {
-        .news-block-root .carousel-item .carousel-image {
-            min-height: 300px;
-            max-height: 300px;
+        .me-5, .mx-5 {
+            margin-right: .25rem !important;
+        }
+
+        .ms-5, .mx-5 {
+            margin-left: .25rem !important;
+        }
+
+        a.bookmark:first-child {
+            margin-left: .25rem;
+        }
+
+        a.bookmark:last-child {
+            margin-right: .25rem;
+        }
+
+        .weather-block:first-child {
+            margin-left: .25rem;
+        }
+
+        .weather-block:last-child {
+            margin-right: .25rem;
+        }
+
+        .news-block-grid {
+            grid-template-columns: repeat(1, 1fr);
         }
     }
 </style>
@@ -304,61 +331,19 @@ foreach ($categories as $category_key => $category) {
                     Aucun titre disponible pour le moment.
                 </div>
             <?php else : ?>
-                <div class="news-block-root">
-                    <div id="newsCarousel<?= $category["uuid"] ?>" class="carousel slide" data-bs-ride="true">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#newsCarousel<?= $category["uuid"] ?>" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Actualité <?= $category["title_fr"] ?> 1"></button>
-                            <?php for ($i = 1; $i < count($category["news"]) - 4; $i++) : ?>
-                                <button type="button" data-bs-target="#newsCarousel<?= $category["uuid"] ?>" data-bs-slide-to="<?= $i ?>" aria-label="Actualité <?= $category["title_fr"] ?> <?= $i + 1 ?>"></button>
-                            <?php endfor; ?>
-                        </div>
-                        <div class="carousel-inner">
-                            <?php for ($i = 0; $i < count($category["news"]) - 4; $i++) : ?>
-                                <div class="carousel-item <?= $i == 0 ? 'active' : '' ?>">
-                                    <!-- <img src="<?= $category["news"][$i]["image"] ?>" class="carousel-image d-block w-100 rounded" alt="Illustration"> -->
-                                    <div class="carousel-image w-100 rounded" style="background-image: url(<?= $category["news"][$i]["image"] ?>)"></div>
-                                    <a href="<?= $category["news"][$i]["link"] ?>" target="_blank" rel="noopener noreferrer">
-                                        <div class="carousel-caption">
-                                            <h5 class="px-2"><?= $category["news"][$i]["title"] ?></h5>
-                                            <div class="d-flex flex-row align-items-center justify-content-center gap-3">
-                                                <img alt="<?= $category["news"][$i]["source"]["name"] ?>" src="<?= $category["news"][$i]["source"]["logo"] ?>" <?php if($category["news"][$i]["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?> height="16">
-                                                <span><?= to_ago_str($category["news"][$i]["pubDate"]) ?></span>
-                                            </div>
-                                        </div>
-                                    </a>
+                <div class="news-block-grid">
+                    <?php foreach ($category["news"] as $newsPiece) : ?>
+                        <a class="news-block-item bg-body-secondary" href="<?= $newsPiece["link"] ?>" target="_blank" rel="noopener noreferrer">
+                            <div class="news-block-item-image" style="background-image: url(<?= $newsPiece["image"] ?>)"></div>
+                            <div class="news-block-item-caption">
+                                <div class="news-block-item-caption-source mb-2">
+                                    <img alt="<?= $newsPiece["source"]["name"] ?>" src="<?= $newsPiece["source"]["logo"] ?>" <?php if ($newsPiece["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
+                                    <small class="text-body-secondary ms-1" aria-label="<?= to_ago_str($newsPiece["pubDate"]) ?>" title="<?= to_ago_str($newsPiece["pubDate"]) ?>"><?= to_short_ago_str($newsPiece["pubDate"]) ?></small>
                                 </div>
-                            <?php endfor; ?>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel<?= $category["uuid"] ?>" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Précédent</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel<?= $category["uuid"] ?>" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Suivant</span>
-                        </button>
-                    </div>
-                    <div class="news-block-grid d-none d-xl-flex">
-                        <?php for ($i = count($category["news"]) - 4; $i < count($category["news"]); $i++) : ?>
-                            <div class="card" style="max-width: 540px;">
-                                <div class="row g-0 align-items-center" style="height: 100%;">
-                                    <div class="col-md-4" style="background-image: url('<?= $category["news"][$i]["image"] ?>');">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <a class="text-decoration-none text-body" href="<?= $category["news"][$i]["link"] ?>" target="_blank" rel="noopener noreferrer">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><?= $category["news"][$i]["title"] ?></h5>
-                                                <p class="card-text">
-                                                    <img alt="<?= $category["news"][$i]["source"]["name"] ?>" src="<?= $category["news"][$i]["source"]["logo"] ?>" <?php if($category["news"][$i]["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
-                                                    <small class="text-body-secondary ms-1">- <?= to_ago_str($category["news"][$i]["pubDate"]) ?></small>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+                                <h6> <?= $newsPiece["title"] ?> </h6>
                             </div>
-                        <?php endfor; ?>
-                    </div>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </div>
