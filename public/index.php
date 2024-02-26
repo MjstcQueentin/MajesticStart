@@ -20,8 +20,8 @@ if (SessionUtils::is_logged_in()) {
 foreach ($categories as $category_key => $category) {
     $categories[$category_key]["news"] = NewsAggregator::get_cache($category["uuid"]);
 
-    if (count($categories[$category_key]["news"]) > 15) {
-        array_splice($categories[$category_key]["news"], 15);
+    if (count($categories[$category_key]["news"]) > 12) {
+        array_splice($categories[$category_key]["news"], 12);
     }
 }
 
