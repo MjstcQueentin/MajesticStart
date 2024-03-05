@@ -51,7 +51,7 @@ class NewsAggregator
      * @param int $max_items 
      * @return array
      */
-    public static function transform($channel_items = [], $source = [], $max_items = 10)
+    public static function transform($channel_items = [], $source = [], $max_items = 12)
     {
         $transformed = [];
 
