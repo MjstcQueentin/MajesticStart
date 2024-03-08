@@ -122,6 +122,12 @@ foreach ($categories as $category_key => $category) {
         gap: 10px;
     }
 
+    .news-block-title {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
     .news-block-item {
         display: block;
         border-radius: 4px;
@@ -165,10 +171,6 @@ foreach ($categories as $category_key => $category) {
         height: 14px;
     }
 
-    body[data-bs-theme="dark"] img.invertable {
-        filter: brightness(0) invert(100);
-    }
-
     /* xxl */
     @media only screen and (max-width: 1400px) {
         .news-block-grid {
@@ -199,28 +201,31 @@ foreach ($categories as $category_key => $category) {
 
     /* */
     @media only screen and (max-width: 576px) {
-        .me-5, .mx-5 {
-            margin-right: .25rem !important;
+
+        .me-5,
+        .mx-5 {
+            margin-right: .5rem !important;
         }
 
-        .ms-5, .mx-5 {
-            margin-left: .25rem !important;
+        .ms-5,
+        .mx-5 {
+            margin-left: .5rem !important;
         }
 
         a.bookmark:first-child {
-            margin-left: .25rem;
+            margin-left: .5rem;
         }
 
         a.bookmark:last-child {
-            margin-right: .25rem;
+            margin-right: .5rem;
         }
 
         .weather-block:first-child {
-            margin-left: .25rem;
+            margin-left: .5rem;
         }
 
         .weather-block:last-child {
-            margin-right: .25rem;
+            margin-right: .5rem;
         }
 
         .news-block-grid {
@@ -326,7 +331,12 @@ foreach ($categories as $category_key => $category) {
     </div>
     <?php foreach ($categories as $category) : ?>
         <div class="mx-5 my-4 news-block">
-            <h2><?= $category["title_fr"] ?></h2>
+            <div class="news-block-title">
+                <h2><?= htmlspecialchars($category["title_fr"]) ?></h2>
+                <a class="btn btn-lg btn-link" href="/feed.php?category=<?= htmlspecialchars($category["uuid"], ENT_COMPAT) ?>" title="Voir le fil complet">
+                    <i class="bi bi-three-dots"></i>
+                </a>
+            </div>
             <?php if (empty($category["news"])) : ?>
                 <div class="alert alert-info">
                     Aucun titre disponible pour le moment.
@@ -341,7 +351,7 @@ foreach ($categories as $category_key => $category) {
                                     <img alt="<?= $newsPiece["source"]["name"] ?>" src="<?= $newsPiece["source"]["logo"] ?>" <?php if ($newsPiece["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
                                     <small class="text-body-secondary ms-1" aria-label="<?= to_ago_str($newsPiece["pubDate"]) ?>" title="<?= to_ago_str($newsPiece["pubDate"]) ?>"><?= to_short_ago_str($newsPiece["pubDate"]) ?></small>
                                 </div>
-                                <h6> <?= $newsPiece["title"] ?> </h6>
+                                <h6> <?= htmlspecialchars($newsPiece["title"]) ?> </h6>
                             </div>
                         </a>
                     <?php endforeach; ?>
@@ -374,6 +384,9 @@ foreach ($categories as $category_key => $category) {
 
         document.addEventListener("DOMContentLoaded", refreshColorMode);
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", refreshColorMode);
+    </script>
+    <script>
+        console.debug(<?= json_encode($categories) ?>);
     </script>
 </body>
 

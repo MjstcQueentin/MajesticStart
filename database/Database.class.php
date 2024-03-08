@@ -40,6 +40,7 @@ class Database
         if (!isset($uuids)) {
             $stmt = $this->pdo->query("SELECT * FROM `newscategory` ORDER BY `display_order` ASC;");
         } elseif (!empty($uuids)) {
+            if (!is_array($uuids)) $uuids = [$uuids];
             $question_marks = str_pad("?", count($uuids) * 2 - 1, ",?");
             $stmt = $this->pdo->prepare("SELECT * FROM `newscategory` WHERE `uuid` IN ($question_marks) ORDER BY `display_order` ASC;");
             $stmt->execute($uuids);
