@@ -28,17 +28,20 @@ include(__DIR__ . "/../init.php");
     </section>
     <section class="container my-5">
         <h3>Éditeur du service</h3>
-        <p>Majestic Start est édité par <b>Quentin Pugeat</b>.</p>
-        <p>basé à Besançon (25000), France.</p>
-        <p>Courriel : contact@quentinpugeat.fr</p>
-        <p>Téléphone : +33 3 81 85 90 85</p>
+        <p>
+            Cette instance de Majestic Start est éditée par <b><?= htmlspecialchars(WEBMASTER_NAME) ?></b>.<br>
+            <?= htmlspecialchars(WEBMASTER_LOCATION) ?><br>
+            Courriel : <?= htmlspecialchars(WEBMASTER_EMAIL) ?><br>
+            Téléphone : <?= htmlspecialchars(WEBMASTER_PHONE) ?>
+        </p>
     </section>
     <section class="container my-5">
         <h3>Hébergeur du service</h3>
-        <p>Majestic Start est hébergé par la société <b>OVH SAS</b>.</p>
-        <p>2 rue Kellermann, 59000 Roubaix, France.</p>
-        <p>Courriel : support@ovh.com</p>
-        <p>Téléphone : +33 9 72 10 10 07</p>
+        <p>Cette instance de Majestic Start est hébergée par <b><?= htmlspecialchars(HOSTER_NAME) ?></b>.<br>
+            <?= htmlspecialchars(HOSTER_LOCATION) ?><br>
+            Courriel : <?= htmlspecialchars(HOSTER_EMAIL) ?><br>
+            Téléphone : <?= htmlspecialchars(HOSTER_PHONE) ?>
+        </p>
     </section>
     <section class="container my-5">
         <h3>Description des données collectées et des finalités justifiant la collecte</h3>

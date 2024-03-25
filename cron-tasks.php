@@ -10,6 +10,9 @@ include(__DIR__ . "/init.php");
 
 $db = new Database();
 
+$log_path = __DIR__ . "/cron-tasks.log";
+$log = fopen($log_path, "a");
+
 $categories = $db->select_newscategories();
 
 foreach ($categories as $category_key => $category) {
@@ -21,8 +24,11 @@ foreach ($categories as $category_key => $category) {
             $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss["channel"]["item"], $source));
         } catch (Exception $ex) {
             fwrite(STDERR, $ex->__toString());
+            if ($log) fwrite($log, date('Y-m-d') . ": " . str_replace(PHP_EOL, " ", $ex->__toString()) . PHP_EOL);
         }
     }
 
     NewsAggregator::aggregate($category["uuid"], $categories[$category_key]["news"]);
 }
+
+if ($log) fclose($log);
