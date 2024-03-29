@@ -1,9 +1,9 @@
 * {
-    font-family: Aileron;
+    font-family: Aileron, sans-serif;
 }
 
 h1 {
-    font-family: Poppins, Aileron;
+    font-family: Poppins, Aileron, sans-serif;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 21px;
