@@ -23,8 +23,10 @@ foreach ($categories as $category_key => $category) {
             $rss = NewsAggregator::load_rss($source['uuid'], $source['rss_feed_url']);
             $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss["channel"]["item"], $source));
         } catch (Exception $ex) {
-            fwrite(STDERR, $ex->__toString());
-            if ($log) fwrite($log, date('Y-m-d') . ": " . str_replace(PHP_EOL, " ", $ex->__toString()) . PHP_EOL);
+            if ($source['source_ok'] == 1) {
+                if ($log) fwrite($log, date('Y-m-d H:i:s') . " [" . $source['rss_feed_url'] . "] " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
+                $db->update_newssource_status($$source["uuid"], 0);
+            }
         }
     }
 

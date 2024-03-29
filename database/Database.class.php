@@ -51,6 +51,12 @@ class Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function update_newssource_status($newssource_uuid, $status_ok)
+    {
+        $stmt = $this->pdo->prepare("UPDATE `newssource` SET `status_ok` = ? WHERE `uuid` = ?");
+        return $stmt->execute([$status_ok, $newssource_uuid]);
+    }
+
     public function select_newssources($newscategory_uuid = null)
     {
         if (!empty($newscategory_uuid)) {

@@ -98,21 +98,20 @@ INSERT INTO `newscategory_has_newssource` (`newscategory_uuid`, `newssource_uuid
 CREATE TABLE `newssource` (
   `uuid` varchar(36) NOT NULL,
   `name` varchar(64) NOT NULL,
-  `icon` text,
   `logo` text,
   `logo_invertable` TINYINT(1) NOT NULL DEFAULT '1',
   `rss_feed_url` text NOT NULL,
-  `homepage_url` text NOT NULL
+  `access_ok` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `newssource`
 --
 
-INSERT INTO `newssource` (`uuid`, `name`, `icon`, `logo`, `rss_feed_url`, `homepage_url`) VALUES
-('14e4e8b0-8c78-11ee-88aa-00155d5b8d37', 'Franceinfo - Les Titres', 'https://www.francetvinfo.fr/favicon.ico', 'https://www.francetvinfo.fr/assets/common/images/logos/franceinfo-619c7b27.svg', 'https://www.francetvinfo.fr/titres.rss', 'https://www.francetvinfo.fr/'),
-('4a34da48-8c86-11ee-88aa-00155d5b8d37', 'Komitid', 'https://www.komitid.fr/wp-content/themes/komitid/imgs/favicon-32x32.png', 'https://www.komitid.fr/wp-content/themes/komitid/imgs/logo_header.png', 'https://www.komitid.fr/feed/', 'https://www.komitid.fr/'),
-('63821acc-8e45-11ee-b37c-00155de63b7d', 'Têtu', 'https://tetu.com/wp-content/uploads/2022/03/cropped-logo-te%CC%82tu-1-180x180.png', 'https://tetu.com/wp-content/uploads/2022/03/cropped-logo-te%CC%82tu-1-180x180.png', 'https://tetu.com/feed/', 'https://tetu.com/');
+INSERT INTO `newssource` (`uuid`, `name`, `logo`, `rss_feed_url`) VALUES
+('14e4e8b0-8c78-11ee-88aa-00155d5b8d37', 'Franceinfo - Les Titres', 'https://www.francetvinfo.fr/assets/common/images/logos/franceinfo-619c7b27.svg', 'https://www.francetvinfo.fr/titres.rss'),
+('4a34da48-8c86-11ee-88aa-00155d5b8d37', 'Komitid', 'https://www.komitid.fr/wp-content/themes/komitid/imgs/logo_header.png', 'https://www.komitid.fr/feed/'),
+('63821acc-8e45-11ee-b37c-00155de63b7d', 'Têtu', 'https://tetu.com/wp-content/uploads/2022/03/cropped-logo-te%CC%82tu-1-180x180.png', 'https://tetu.com/feed/');
 
 -- --------------------------------------------------------
 
