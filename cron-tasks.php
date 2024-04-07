@@ -19,11 +19,12 @@ foreach ($categories as $category_key => $category) {
     $categories[$category_key]["news"] = [];
     $categories[$category_key]["sources"] = $db->select_newssources($category["uuid"]);
     foreach ($categories[$category_key]["sources"] as $source_key => $source) {
+        if ($source['access_ok'] == 0) continue;
         try {
             $rss = NewsAggregator::load_rss($source['uuid'], $source['rss_feed_url']);
             $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss["channel"]["item"], $source));
         } catch (Exception $ex) {
-            if ($source['source_ok'] == 1) {
+            if ($source['access_ok'] == 1) {
                 if ($log) fwrite($log, date('Y-m-d H:i:s') . " [" . $source['rss_feed_url'] . "] " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
                 $db->update_newssource_status($source["uuid"], 0);
             }
