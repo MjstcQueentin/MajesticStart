@@ -25,7 +25,7 @@ foreach ($categories as $category_key => $category) {
         } catch (Exception $ex) {
             if ($source['source_ok'] == 1) {
                 if ($log) fwrite($log, date('Y-m-d H:i:s') . " [" . $source['rss_feed_url'] . "] " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
-                $db->update_newssource_status($$source["uuid"], 0);
+                $db->update_newssource_status($source["uuid"], 0);
             }
         }
     }
