@@ -8,10 +8,11 @@
 class NewsAggregator
 {
     /**
-     * Charge un flux RSS, le met en cache et retourne un array le représentant.
+     * Charge un flux RSS, le met en cache et retourne son contenu en SimpleXMLElement.
      * @param string $source_uuid UUID de la source
      * @param string $rss_link URI à partir de laquelle charger le flux
-     * @return array
+     * @throws RuntimeException When the source responds with an HTTP error and no cache is available
+     * @return SimpleXMLElement
      */
     public static function load_rss($source_uuid, $rss_link)
     {
@@ -25,7 +26,7 @@ class NewsAggregator
                 CURLOPT_RETURNTRANSFER => true
             ]);
             $xml = curl_exec($ch);
-            
+
             if (curl_errno($ch) != 0) {
                 // When the connection fails, use the cache when available
                 if (is_file($cache_link)) {
@@ -41,12 +42,18 @@ class NewsAggregator
             $xml = file_get_contents($cache_link);
         }
 
-        return json_decode(json_encode(new SimpleXMLElement($xml, LIBXML_NOCDATA)), true);
+        $xmlObject = new SimpleXMLElement($xml, LIBXML_NOCDATA);
+        $namespaces = $xmlObject->getNameSpaces(true);
+        foreach ($namespaces as $namespace => $nsSource) {
+            $xmlObject->registerXPathNamespace($namespace, $nsSource);
+        }
+
+        return $xmlObject;
     }
 
     /**
      * Transforme des items d'un flux RSS en arrays standardisés.
-     * @param array $channel_items Tableau d'éléments <item>
+     * @param SimpleXMLElement|SimpleXMLElement[] $channel_items Tableau d'éléments <item>
      * @param array $source Objet source de laquelle proviennent les items
      * @param int $max_items 
      * @return array
@@ -57,21 +64,27 @@ class NewsAggregator
 
         foreach ($channel_items as $item) {
             $image_src = "/assets/fallback-image.png";
-            if (!empty($item["enclosure"])) {
-                // Image jointe
-                if (array_key_first($item["enclosure"]) == "@attributes" && stripos($item["enclosure"]["@attributes"]["type"], "image/") !== false) {
-                    $image_src = $item["enclosure"]["@attributes"]["url"];
-                } elseif (array_key_first($item["enclosure"]) == [0]) {
-                    foreach ($item["enclosure"] as $enclosure) {
-                        if (stripos($enclosure["@attributes"]["type"], "image/") !== false) {
-                            $image_src = $enclosure["@attributes"]["url"];
-                            break;
-                        }
-                    }
+            if (isset($item->enclosure)) {
+                // Pièce jointe
+                if (stripos($item->enclosure->attributes()->type, "image/") !== false) {
+                    $image_src = $item->enclosure->attributes()->url;
                 }
+            } elseif (in_array("media", array_keys($item->getNamespaces(true))) && !empty($item->xpath("media:content"))) {
+                // Média joint
+                $image_src = $item->xpath("media:content")[0]->attributes()->url;
+            } elseif (in_array("media", array_keys($item->getNamespaces(true))) && !empty($item->xpath("media:thumbnail"))) {
+                // Média joint
+                $image_src = $item->xpath("media:thumbnail")[0]->attributes()->url;
             } else {
                 // Chercher sur la page de destination
-                $html = file_get_contents($item['link']);
+                $ch = curl_init($item->link);
+                curl_setopt_array($ch, [
+                    CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/124.0.2",
+                    CURLOPT_FAILONERROR => true,
+                    CURLOPT_RETURNTRANSFER => true
+                ]);
+                $html = curl_exec($ch);
+
                 if (!empty($html) && $html !== false) {
                     $page = new DOMDocument();
                     @$page->loadHTML($html);
@@ -93,10 +106,11 @@ class NewsAggregator
             }
 
             $transformed[] = [
-                "title" => $item["title"],
-                "pubDate" => DateTime::createFromFormat('D, d M Y H:i:s O', $item["pubDate"])->format('U'), // Sun, 26 Nov 2023 16:45:30 +0100
-                "link" => $item["link"],
-                "image" => $image_src,
+                "title" => strval($item->title),
+                "description" => strval($item->description),
+                "pubDate" => DateTime::createFromFormat('D, d M Y H:i:s O', strval($item->pubDate))->format('U'), // Sun, 26 Nov 2023 16:45:30 +0100
+                "link" => strval($item->link),
+                "image" => strval($image_src),
                 "source" => $source
             ];
 

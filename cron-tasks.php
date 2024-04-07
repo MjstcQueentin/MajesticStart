@@ -7,6 +7,12 @@
  */
 
 include(__DIR__ . "/init.php");
+set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) {
+    fwrite(STDERR, "$errstr ($errfile:$errline)" . PHP_EOL);
+});
+set_exception_handler(function ($ex) {
+    fwrite(STDERR, $ex->__toString() . PHP_EOL);
+});
 
 $db = new Database();
 
@@ -19,11 +25,11 @@ foreach ($categories as $category_key => $category) {
     $categories[$category_key]["news"] = [];
     $categories[$category_key]["sources"] = $db->select_newssources($category["uuid"]);
     foreach ($categories[$category_key]["sources"] as $source_key => $source) {
-        if ($source['access_ok'] == 0) continue;
         try {
             $rss = NewsAggregator::load_rss($source['uuid'], $source['rss_feed_url']);
-            $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss["channel"]["item"], $source));
-        } catch (Exception $ex) {
+            $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss->channel->item, $source));
+            $db->update_newssource_status($source["uuid"], 1);
+        } catch (RuntimeException $ex) {
             if ($source['access_ok'] == 1) {
                 if ($log) fwrite($log, date('Y-m-d H:i:s') . " [" . $source['rss_feed_url'] . "] " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
                 $db->update_newssource_status($source["uuid"], 0);
@@ -35,10 +41,10 @@ foreach ($categories as $category_key => $category) {
 }
 
 // Nettoyage du cache des images
-// Supprimer mes images plus vieilles qu'un jour
+// Supprimer les images plus vieilles qu'un jour
 $imageCachePath = __DIR__ . "/public/assets/image-cache";
 foreach (scandir($imageCachePath) as $fileName) {
-    if (filemtime($imageCachePath . "/" . $fileName) < time() - (24 * 60 * 60)) {
+    if (is_file($imageCachePath . "/" . $fileName) && filemtime($imageCachePath . "/" . $fileName) < time() - (24 * 60 * 60)) {
         unlink($imageCachePath . "/" . $fileName);
     }
 }
