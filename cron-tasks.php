@@ -40,13 +40,4 @@ foreach ($categories as $category_key => $category) {
     NewsAggregator::aggregate($category["uuid"], $categories[$category_key]["news"]);
 }
 
-// Nettoyage du cache des images
-// Supprimer les images plus vieilles qu'un jour
-$imageCachePath = __DIR__ . "/public/assets/image-cache";
-foreach (scandir($imageCachePath) as $fileName) {
-    if (is_file($imageCachePath . "/" . $fileName) && filemtime($imageCachePath . "/" . $fileName) < time() - (24 * 60 * 60)) {
-        unlink($imageCachePath . "/" . $fileName);
-    }
-}
-
 if ($log) fclose($log);
