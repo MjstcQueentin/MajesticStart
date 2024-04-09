@@ -61,11 +61,3 @@ function to_short_ago_str($timestamp)
     $months = round($diff / 60 / 60 / 24 / 12);
     return "$months mois";
 }
-
-function to_image_url($src)
-{
-    if (substr($src, 0, 5) == "data:") return $src;
-    if (substr($src, 0, 1) == "/") return $src;
-
-    return ENVIRONMENT_ROOT . "/fetch/image.php?url=" . urlencode($src);
-}

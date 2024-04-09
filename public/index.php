@@ -31,7 +31,7 @@ foreach ($categories as $category_key => $category) {
 <?= TemplateEngine::head() ?>
 <style>
     #top {
-        background-image: url('<?= to_image_url($settings['photo_url']) ?>');
+        background-image: url('<?= $settings['photo_url'] ?>');
         background-size: cover;
         background-position: center;
         min-height: calc(100vh - 42px);
@@ -242,7 +242,7 @@ foreach ($categories as $category_key => $category) {
             <form action="<?= $searchengine["result_url"] ?>" class="mb-1">
                 <div class="input-group input-group-lg">
                     <span class="input-group-text bg-body border-end-0" id="provider-logo">
-                        <img src="<?= to_image_url($searchengine["icon"]) ?>" alt="<?= $searchengine["name"] ?>" height="24">
+                        <img src="<?= $searchengine["icon"] ?>" alt="<?= $searchengine["name"] ?>" height="24">
                     </span>
                     <input type="text" name="<?= $searchengine["query_param"] ?>" autofocus required class="form-control border-start-0 border-end-0" placeholder="Rechercher avec <?= $searchengine["name"] ?>" aria-label="Termes de recherches" aria-describedby="provider-logo">
                     <button class="btn btn-light border-top border-bottom border-end" type="submit" aria-label="Lancer la recherche"><i class="bi bi-search"></i></button>
@@ -283,7 +283,7 @@ foreach ($categories as $category_key => $category) {
             <?php endif; ?>
             <?php foreach ($bookmarks as $bookmark) : ?>
                 <a href="<?= $bookmark["url"] ?>" class="shadow-sm bookmark bg-body-secondary" title="<?= $bookmark["name"] ?>">
-                    <img src="<?= to_image_url($bookmark["icon"]) ?>" alt="<?= $bookmark["name"] ?>" height="55">
+                    <img src="<?= $bookmark["icon"] ?>" alt="<?= $bookmark["name"] ?>" height="55">
                 </a>
             <?php endforeach; ?>
         </div>
@@ -345,10 +345,10 @@ foreach ($categories as $category_key => $category) {
                 <div class="news-block-grid">
                     <?php foreach ($category["news"] as $newsPiece) : ?>
                         <a class="news-block-item bg-body-secondary" href="<?= $newsPiece["link"] ?>" target="_blank" rel="noopener noreferrer">
-                            <div class="news-block-item-image" style="background-image: url(<?= to_image_url($newsPiece["image"]) ?>)"></div>
+                            <div class="news-block-item-image" style="background-image: url(<?= $newsPiece["image"] ?>)"></div>
                             <div class="news-block-item-caption">
                                 <div class="news-block-item-caption-source mb-2">
-                                    <img alt="<?= $newsPiece["source"]["name"] ?>" src="<?= to_image_url($newsPiece["source"]["logo"]) ?>" <?php if ($newsPiece["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
+                                    <img alt="<?= $newsPiece["source"]["name"] ?>" src="<?= $newsPiece["source"]["logo"] ?>" <?php if ($newsPiece["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
                                     <small class="text-body-secondary ms-1" aria-label="<?= to_ago_str($newsPiece["pubDate"]) ?>" title="<?= to_ago_str($newsPiece["pubDate"]) ?>"><?= to_short_ago_str($newsPiece["pubDate"]) ?></small>
                                 </div>
                                 <h6> <?= htmlspecialchars($newsPiece["title"]) ?> </h6>
