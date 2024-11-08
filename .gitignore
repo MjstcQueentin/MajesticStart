@@ -8,4 +8,4 @@ config/config.php
 engine/raw-xml-cache/*.xml
 engine/aggregator-cache/*.json
 engine/aggregator-cache/*.sd
-cron-tasks.log
+logs/*.log
