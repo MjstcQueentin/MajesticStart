@@ -6,18 +6,20 @@
  * @license MIT License
  */
 
+$log_path = __DIR__ . "/logs/cron-task-" . date("YmdHis") . "-" . getmypid() . ".log";
+$log = fopen($log_path, "a");
+
 include(__DIR__ . "/init.php");
-set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) {
+set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) use (&$log) {
     fwrite(STDERR, "$errstr ($errfile:$errline)" . PHP_EOL);
+    if ($log) fwrite($log, date('Y-m-d H:i:s') . " $errstr ($errfile:$errline)" . PHP_EOL);
 });
-set_exception_handler(function ($ex) {
+set_exception_handler(function ($ex) use (&$log) {
     fwrite(STDERR, $ex->__toString() . PHP_EOL);
+    if ($log) fwrite($log, date('Y-m-d H:i:s') . " " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
 });
 
 $db = new Database();
-
-$log_path = __DIR__ . "/cron-tasks.log";
-$log = fopen($log_path, "a");
 
 // Mise à jour des informations dans Majestic Start
 $categories = $db->select_newscategories();
@@ -29,7 +31,7 @@ foreach ($categories as $category_key => $category) {
             $rss = NewsAggregator::load_rss($source['uuid'], $source['rss_feed_url']);
             $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss->channel->item, $source));
             $db->update_newssource_status($source["uuid"], 1);
-        } catch (RuntimeException $ex) {
+        } catch (Exception $ex) {
             if ($source['access_ok'] == 1) {
                 if ($log) fwrite($log, date('Y-m-d H:i:s') . " [" . $source['rss_feed_url'] . "] " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
                 $db->update_newssource_status($source["uuid"], 0);
