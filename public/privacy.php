@@ -5,7 +5,7 @@ include(__DIR__ . "/../init.php");
 <html lang="fr">
 <?= TemplateEngine::head("La confidentialité sur Majestic Start") ?>
 
-<body>
+<body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
     <?= TemplateEngine::header() ?>
 
     <div class="px-5 py-3 bg-body-secondary">

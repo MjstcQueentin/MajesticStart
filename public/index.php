@@ -234,7 +234,7 @@ foreach ($categories as $category_key => $category) {
     }
 </style>
 
-<body>
+<body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
     <?= TemplateEngine::header() ?>
     <div id="top" class="shadow">
         <div></div>

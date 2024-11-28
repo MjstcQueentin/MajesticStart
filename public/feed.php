@@ -22,7 +22,7 @@ $category = $category[0];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<?= TemplateEngine::head($category["title_fr"]." | Majestic Start") ?>
+<?= TemplateEngine::head($category["title_fr"] . " | Majestic Start") ?>
 <style>
     #top {
         background-image: url('<?= $settings['photo_url'] ?>');
@@ -91,7 +91,7 @@ $category = $category[0];
     }
 </style>
 
-<body>
+<body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
     <?= TemplateEngine::header() ?>
 
     <div class="px-5 py-3 bg-body-secondary">

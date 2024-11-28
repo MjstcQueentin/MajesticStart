@@ -30,7 +30,7 @@ $newscategories = $db->select_newscategories();
 <html lang="fr">
 <?= TemplateEngine::head("Paramètres | Majestic Start") ?>
 
-<body>
+<body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
     <?= TemplateEngine::header("Paramètres") ?>
     <form class="d-flex flex-row" style="height: calc(100vh - 42px); max-height: calc(100vh - 42px);" action="settings.php" method="POST">
         <div class="col-4 h-100 overflow-auto border-end d-none d-md-block">
