@@ -5,4 +5,5 @@ final class NewsCategoryModel extends DatabaseQuerier
 {
     protected string $tableName = "newscategory";
     protected string $primaryKey = "uuid";
+    protected ?string $primaryKeyType = "uniqid";
 }

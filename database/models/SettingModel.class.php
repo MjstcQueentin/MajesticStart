@@ -6,6 +6,7 @@ final class SettingModel extends DatabaseQuerier
 {
     protected string $tableName = "setting";
     protected string $primaryKey = "name";
+    protected ?string $primaryKeyType = null;
 
     public function select_all($orderBy = [])
     {

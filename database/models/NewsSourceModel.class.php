@@ -5,6 +5,7 @@ final class NewsSourceModel extends DatabaseQuerier
 {
     protected string $tableName = "newssource";
     protected string $primaryKey = "uuid";
+    protected ?string $primaryKeyType = "uniqid";
 
     public function select_in_category(string $newscategory_uuid)
     {

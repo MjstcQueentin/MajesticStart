@@ -14,10 +14,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
             "uuid" => null,
             "name" => $_POST["name"],
             "url" => $_POST["url"],
-            "icon" => BookmarkUtils::iconFrom($_POST["url"])
+            "icon" => BookmarkUtils::iconFrom($_POST["url"]),
+            "user_id" => $_SESSION["user_uuid"]
         ];
-        model('BookmarkModel')->insert_one($bookmark);
-        $bookmark["uuid"] = model('BookmarkModel')->insert_id();
+        $model = model('BookmarkModel');
+        $model->insert_one($bookmark);
+        $bookmark["uuid"] = $model->insert_id();
         http_response_code(201);
         echo json_encode($bookmark);
         break;

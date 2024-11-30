@@ -17,8 +17,8 @@ abstract class DatabaseQuerier
     /** @var string $primaryKey Primary key of the table */
     protected string $primaryKey;
 
-    /** @var string $primaryKeyType "autoincrement" or "uniqid" */
-    protected string $primaryKeyType = "autoincrement";
+    /** @var string $primaryKeyType "autoincrement", "uniqid" ou NULL */
+    protected ?string $primaryKeyType = "autoincrement";
 
     private int|string $insertId;
 

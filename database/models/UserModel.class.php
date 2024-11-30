@@ -5,6 +5,7 @@ final class UserModel extends DatabaseQuerier
 {
     protected string $tableName = "user";
     protected string $primaryKey = "majesticloud_user_id";
+    protected ?string $primaryKeyType = null;
 
     public function insert_one(array $data, bool $return_id = false)
     {

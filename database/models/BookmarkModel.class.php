@@ -5,4 +5,5 @@ final class BookmarkModel extends DatabaseQuerier
 {
     protected string $tableName = "bookmark";
     protected string $primaryKey = "uuid";
+    protected ?string $primaryKeyType = "uniqid";
 }
