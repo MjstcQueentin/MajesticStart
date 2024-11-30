@@ -107,7 +107,7 @@ class NewsAggregator
 
             $transformed[] = [
                 "title" => strval($item->title),
-                "description" => strval($item->description),
+                "description" => strip_tags(strval($item->description)),
                 "pubDate" => DateTime::createFromFormat('D, d M Y H:i:s O', strval($item->pubDate))->format('U'), // Sun, 26 Nov 2023 16:45:30 +0100
                 "link" => strval($item->link),
                 "image" => strval($image_src),

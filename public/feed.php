@@ -111,7 +111,7 @@ if (empty($category) || empty($news)) {
                 <div class="news-article-image" style="background-image: url(<?= htmlspecialchars($article["image"], ENT_COMPAT) ?>)"></div>
                 <div class="news-article-text">
                     <h3><?= htmlspecialchars($article["title"]) ?></h3>
-                    <p><?= htmlspecialchars($article["title"]) ?></p>
+                    <p><?= htmlspecialchars($article["description"]) ?></p>
                     <div class="news-article-metadata">
                         <img <?php if ($article["source"]["logo_invertable"] == 1) echo 'class="invertable"'; ?> src="<?= htmlspecialchars($article["source"]["logo"], ENT_COMPAT) ?>" alt="<?= htmlspecialchars($article["source"]["name"], ENT_COMPAT) ?>">
                         <small class="text-body-secondary" aria-label="<?= to_ago_str($article["pubDate"]) ?>" title="<?= to_ago_str($article["pubDate"]) ?>"><?= to_ago_str($article["pubDate"]) ?></small>
