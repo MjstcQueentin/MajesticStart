@@ -26,13 +26,14 @@ foreach ($categories as $category_key => $category) {
     }
 }
 
+$planned_event = model('PlannedEventModel')->select_today();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <?= TemplateEngine::head() ?>
 <style>
     #top {
-        background-image: url('<?= $settings['photo_url'] ?>');
+        background-image: url('<?= !empty($planned_event) ? $planned_event['picture_url'] : $settings['photo_url'] ?>');
         background-size: cover;
         background-position: center;
         min-height: calc(100vh - 42px);
@@ -246,18 +247,30 @@ foreach ($categories as $category_key => $category) {
                         <img src="<?= $searchengine["icon"] ?>" alt="<?= $searchengine["name"] ?>" height="24">
                     </span>
                     <input type="text" name="<?= $searchengine["query_param"] ?>" autofocus required class="form-control border-start-0 border-end-0" placeholder="Rechercher avec <?= $searchengine["name"] ?>" aria-label="Termes de recherches" aria-describedby="provider-logo">
-                    <button class="btn btn-light border-top border-bottom border-end" type="submit" aria-label="Lancer la recherche"><i class="bi bi-search"></i></button>
+                    <button class="btn btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?> border-top border-bottom border-end" type="submit" aria-label="Lancer la recherche"><i class="bi bi-search"></i></button>
                 </div>
             </form>
             <div class="d-flex flex-row flex-wrap gap-1">
-                <a class="btn btn-sm btn-light" target="_blank" rel="noopener noreferrer" href="<?= $settings['photo_author_url'] ?>" title="Auteur de la photo">
-                    <span class="visually-hidden">Auteur de la photo</span> <i class="bi bi-person"></i> <?= $settings['photo_author'] ?>
-                </a>
-                <a class="btn btn-sm btn-light" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $settings['photo_place'] ?>" title="Emplacement de la photo">
-                    <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $settings['photo_place'] ?>
-                </a>
+                <?php if (!empty($planned_event)): ?>
+                    <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" href="<?= $planned_event['picture_author_url'] ?>" title="Auteur de la photo">
+                        <span class="visually-hidden">Auteur de la photo</span> <i class="bi bi-person"></i> <?= $planned_event['picture_author'] ?>
+                    </a>
+                    <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $planned_event['picture_place'] ?>" title="Emplacement de la photo">
+                        <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $planned_event['picture_place'] ?>
+                    </a>
+                    <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" target="_blank" rel="noopener noreferrer" href="<?= str_contains($planned_event['topic_link_or_query'], "https://") ? $planned_event['topic_link_or_query'] : ($searchengine["result_url"] . "?" . $searchengine["query_param"] . "=" . urlencode($planned_event['topic_link_or_query'])) ?>" title="Évènement spécial en cours">
+                        <span class="visually-hidden">Évènement spécial</span> <i class="bi bi-calendar-heart"></i> <?= $planned_event['topic_name'] ?>
+                    </a>
+                <?php else: ?>
+                    <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="<?= $settings['photo_author_url'] ?>" title="Auteur de la photo">
+                        <span class="visually-hidden">Auteur de la photo</span> <i class="bi bi-person"></i> <?= $settings['photo_author'] ?>
+                    </a>
+                    <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $settings['photo_place'] ?>" title="Emplacement de la photo">
+                        <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $settings['photo_place'] ?>
+                    </a>
+                <?php endif; ?>
                 <?php foreach ($topics as $topic) : ?>
-                    <a class="btn btn-sm btn-light" target="_blank" rel="noopener noreferrer" href="<?= str_contains($topic["link_or_query"], "https://") ? $topic["link_or_query"] : ($searchengine["result_url"] . "?" . $searchengine["query_param"] . "=" . urlencode($topic["link_or_query"])) ?>">
+                    <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="<?= str_contains($topic["link_or_query"], "https://") ? $topic["link_or_query"] : ($searchengine["result_url"] . "?" . $searchengine["query_param"] . "=" . urlencode($topic["link_or_query"])) ?>">
                         <?php if ($topic["is_official"] == 1) : ?>
                             <i class="bi bi-patch-check-fill" title="Source officielle"></i><span class="visually-hidden">Source officielle</span>
                         <?php elseif ($topic["is_featured"] == 1) : ?>
@@ -293,7 +306,7 @@ foreach ($categories as $category_key => $category) {
         <div class="ms-5 d-flex flex-row gap-4 align-items-baseline">
             <div class="d-flex flex-row gap-4 align-items-center">
                 <h2 class="m-0">Météo</h2>
-                <img id="weather-logo" src="/assets/logos/openweather_white_cropped.png" alt="OpenWeatherMap" height="28">
+                <img id="weather-logo" src="/assets/logos/openweather_white_cropped.png" lightsrc="/assets/logos/openweather_black_cropped.png" darksrc="/assets/logos/openweather_white_cropped.png" alt="OpenWeatherMap" height="28">
             </div>
             <p class="text-muted m-0 d-none"><i class="bi bi-geo-alt"></i> Ville</p>
         </div>
@@ -366,28 +379,26 @@ foreach ($categories as $category_key => $category) {
         function refreshColorMode() {
             var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
             var topics = document.querySelectorAll("#top .top-search-bar .btn");
-            var weatherLogo = document.querySelector("#weather-logo");
 
             if (mediaQuery.matches) {
-                weatherLogo.setAttribute("src", "/assets/logos/openweather_white_cropped.png");
                 topics.forEach((value, key, parent) => {
-                    value.classList.remove("btn-light");
-                    value.classList.add("btn-dark");
+                    if (value.classList.contains("btn-light")) {
+                        value.classList.remove("btn-light");
+                        value.classList.add("btn-dark");
+                    }
                 });
             } else {
-                weatherLogo.setAttribute("src", "/assets/logos/openweather_black_cropped.png");
                 topics.forEach((value, key, parent) => {
-                    value.classList.remove("btn-dark");
-                    value.classList.add("btn-light");
+                    if (value.classList.contains("btn-dark")) {
+                        value.classList.remove("btn-dark");
+                        value.classList.add("btn-light");
+                    }
                 });
             }
         }
 
         document.addEventListener("DOMContentLoaded", refreshColorMode);
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener("change", refreshColorMode);
-    </script>
-    <script>
-        console.debug(<?= json_encode($categories) ?>);
     </script>
 </body>
 
