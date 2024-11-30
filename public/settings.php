@@ -5,26 +5,22 @@ if (!SessionUtils::is_logged_in()) {
     header('Location: /login.php');
 }
 
-$db = new Database();
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $db->update_user(
-        $_SESSION["user_uuid"],
-        $_POST["set_searchengine"],
-        json_encode(!empty($_POST["set_newscategories"]) ? $_POST["set_newscategories"] : [])
-    );
+    model("UserModel")->update_one($_SESSION["user_uuid"], [
+        "set_searchengine" => $_POST["set_searchengine"],
+        "set_newscategories" => json_encode(!empty($_POST["set_newscategories"]) ? $_POST["set_newscategories"] : [])
+    ]);
 
     http_response_code(307);
     header('Location: /');
 }
 
-$user = $db->select_user($_SESSION["user_uuid"]);
+$user = model("UserModel")->select_one($_SESSION["user_uuid"]);
 $user["set_newscategories"] =  !empty($user["set_newscategories"]) ? json_decode($user["set_newscategories"]) : [];
-$user["bookmarks"] = $db->select_bookmarks($_SESSION["user_uuid"]);
+$user["bookmarks"] = model('BookmarkModel')->select(['user_id' => $_SESSION["user_uuid"]]);
 
-$searchengines = $db->select_searchengines();
-$newssources = $db->select_newssources();
-$newscategories = $db->select_newscategories();
+$searchengines = model('SearchEngineModel')->select_all();
+$newscategories = model('NewsCategoryModel')->select_all();
 ?>
 <!DOCTYPE html>
 <html lang="fr">

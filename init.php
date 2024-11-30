@@ -6,13 +6,13 @@ session_start();
 global $errors;
 $errors = [];
 
-require(__DIR__ . "/config/config.php");
-require(__DIR__ . "/database/Database.class.php");
-require(__DIR__ . "/engine/BookmarkUtils.class.php");
-require(__DIR__ . "/engine/Session.class.php");
-require(__DIR__ . "/engine/NewsAggregator.class.php");
-require(__DIR__ . "/engine/OpenWeatherMap.class.php");
-require(__DIR__ . "/templates/TemplateEngine.class.php");
+require_once(__DIR__ . "/config/config.php");
+require_once(__DIR__ . "/database/DatabaseQuerier.class.php");
+require_once(__DIR__ . "/engine/BookmarkUtils.class.php");
+require_once(__DIR__ . "/engine/Session.class.php");
+require_once(__DIR__ . "/engine/NewsAggregator.class.php");
+require_once(__DIR__ . "/engine/OpenWeatherMap.class.php");
+require_once(__DIR__ . "/templates/TemplateEngine.class.php");
 
 set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) {
     global $errors;
@@ -23,6 +23,18 @@ set_exception_handler(function ($ex) {
     http_response_code(500);
     echo TemplateEngine::error($ex->__toString());
 });
+
+/**
+ * Get a model instance
+ * @param class-string<DatabaseQuerier>|string $modelName
+ * @return DatabaseQuerier|null
+ * @phpstan-return ($modelName is class-string<DatabaseQuerier> ? ModelTemplate : object|null)
+ */
+function model(string $modelName)
+{
+    require_once(__DIR__ . "/database/models/$modelName.class.php");
+    return new $modelName();
+}
 
 function to_ago_str($timestamp)
 {

@@ -1,20 +1,21 @@
 <?php
 include(__DIR__ . "/../init.php");
 
-$db = new Database();
-$settings = $db->select_settings();
-$topics = $db->select_topics();
+$settings = model('SettingModel')->select_all();
+$topics = model('TopicModel')->select_all(["is_official" => "DESC", "is_featured" => "DESC"]);
 if (SessionUtils::is_logged_in()) {
-    $user = $db->select_user($_SESSION["user"]["uuid"]);
+    $user = model('UserModel')->select_one($_SESSION["user"]["uuid"]);
     $user["set_newscategories"] =  !empty($user["set_newscategories"]) ? json_decode($user["set_newscategories"]) : [];
 
-    $searchengine = $db->select_searchengines($user["set_searchengine"] ?? $settings["default_searchengine"]);
-    $bookmarks = $db->select_bookmarks($_SESSION["user"]["uuid"]);
-    $categories = $db->select_newscategories($user["set_newscategories"]);
+    $searchengine = model('SearchEngineModel')->select_one($user["set_searchengine"] ?? $settings["default_searchengine"]);
+    $bookmarks = model('BookmarkModel')->select(["user_id" => $_SESSION["user"]["uuid"]]);
+    $categories = !empty($user["set_newscategories"])
+        ? model('NewsCategoryModel')->select(["uuid" => $user["set_newscategories"]], ["display_order" => "ASC"])
+        : model('NewsCategoryModel')->select_all(["display_order" => "ASC"]);
 } else {
-    $searchengine = $db->select_searchengines($settings["default_searchengine"]);
-    $bookmarks = $db->select_bookmarks();
-    $categories = $db->select_newscategories();
+    $searchengine = model('SearchEngineModel')->select_one($settings["default_searchengine"]);
+    $bookmarks = model('BookmarkModel')->select(["user_id" => null]);
+    $categories = model('NewsCategoryModel')->select_all(["display_order" => "ASC"]);
 }
 
 foreach ($categories as $category_key => $category) {

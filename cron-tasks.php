@@ -11,30 +11,28 @@ $log = fopen($log_path, "a");
 
 include(__DIR__ . "/init.php");
 set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) use (&$log) {
-    fwrite(STDERR, "$errstr ($errfile:$errline)" . PHP_EOL);
+    echo "$errstr ($errfile:$errline)".PHP_EOL;
     if ($log) fwrite($log, date('Y-m-d H:i:s') . " $errstr ($errfile:$errline)" . PHP_EOL);
 });
 set_exception_handler(function ($ex) use (&$log) {
-    fwrite(STDERR, $ex->__toString() . PHP_EOL);
+    echo $ex->__toString() . PHP_EOL;
     if ($log) fwrite($log, date('Y-m-d H:i:s') . " " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
 });
 
-$db = new Database();
-
 // Mise à jour des informations dans Majestic Start
-$categories = $db->select_newscategories();
+$categories = model('NewsCategoryModel')->select_all();
 foreach ($categories as $category_key => $category) {
     $categories[$category_key]["news"] = [];
-    $categories[$category_key]["sources"] = $db->select_newssources($category["uuid"]);
+    $categories[$category_key]["sources"] = model('NewsSourceModel')->select_in_category($category["uuid"]);
     foreach ($categories[$category_key]["sources"] as $source_key => $source) {
         try {
             $rss = NewsAggregator::load_rss($source['uuid'], $source['rss_feed_url']);
             $categories[$category_key]["news"] = array_merge($categories[$category_key]["news"], NewsAggregator::transform($rss->channel->item, $source));
-            $db->update_newssource_status($source["uuid"], 1);
+            model('NewsSourceModel')->update_one($source["uuid"], ["access_ok" => 1]);
         } catch (Exception $ex) {
             if ($source['access_ok'] == 1) {
                 if ($log) fwrite($log, date('Y-m-d H:i:s') . " [" . $source['rss_feed_url'] . "] " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
-                $db->update_newssource_status($source["uuid"], 0);
+                model('NewsSourceModel')->update_one($source["uuid"], ["access_ok" => 0]);
             }
         }
     }

@@ -52,7 +52,7 @@ class TemplateEngine
 
     public static function error($errstr) {
         return self::template("error", [
-            "errstr" => $errstr
+            "errstr" => nl2br($errstr)
         ]);
     }
 }

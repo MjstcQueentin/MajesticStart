@@ -7,17 +7,14 @@ if (empty($_GET["category"])) {
     http_response_code(307);
 }
 
-$db = new Database();
-$settings = $db->select_settings();
-$category = $db->select_newscategories($_GET["category"]);
+$settings = model('SettingModel')->select_all();
+$category = model('NewsCategoryModel')->select_one($_GET["category"]);
 $news = NewsAggregator::get_cache($_GET["category"]);
 
 if (empty($category) || empty($news)) {
     header("Location: /");
     http_response_code(307);
 }
-
-$category = $category[0];
 
 ?>
 <!DOCTYPE html>
