@@ -255,9 +255,11 @@ $planned_event = model('PlannedEventModel')->select_today();
                     <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" href="<?= $planned_event['picture_author_url'] ?>" title="Auteur de la photo">
                         <span class="visually-hidden">Auteur de la photo</span> <i class="bi bi-person"></i> <?= $planned_event['picture_author'] ?>
                     </a>
-                    <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $planned_event['picture_place'] ?>" title="Emplacement de la photo">
-                        <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $planned_event['picture_place'] ?>
-                    </a>
+                    <?php if (!empty($planned_event['picture_place'])): ?>
+                        <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $planned_event['picture_place'] ?>" title="Emplacement de la photo">
+                            <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $planned_event['picture_place'] ?>
+                        </a>
+                    <?php endif; ?>
                     <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" target="_blank" rel="noopener noreferrer" href="<?= str_contains($planned_event['topic_link_or_query'], "https://") ? $planned_event['topic_link_or_query'] : ($searchengine["result_url"] . "?" . $searchengine["query_param"] . "=" . urlencode($planned_event['topic_link_or_query'])) ?>" title="Évènement spécial en cours">
                         <span class="visually-hidden">Évènement spécial</span> <i class="bi bi-calendar-heart"></i> <?= $planned_event['topic_name'] ?>
                     </a>
@@ -265,9 +267,11 @@ $planned_event = model('PlannedEventModel')->select_today();
                     <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="<?= $settings['photo_author_url'] ?>" title="Auteur de la photo">
                         <span class="visually-hidden">Auteur de la photo</span> <i class="bi bi-person"></i> <?= $settings['photo_author'] ?>
                     </a>
-                    <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $settings['photo_place'] ?>" title="Emplacement de la photo">
-                        <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $settings['photo_place'] ?>
-                    </a>
+                    <?php if (!empty($settings['photo_place'])): ?>
+                        <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/search?query=<?= $settings['photo_place'] ?>" title="Emplacement de la photo">
+                            <span class="visually-hidden">Emplacement de la photo</span> <i class="bi bi-geo-alt"></i> <?= $settings['photo_place'] ?>
+                        </a>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <?php foreach ($topics as $topic) : ?>
                     <a class="btn btn-sm btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?>" target="_blank" rel="noopener noreferrer" href="<?= str_contains($topic["link_or_query"], "https://") ? $topic["link_or_query"] : ($searchengine["result_url"] . "?" . $searchengine["query_param"] . "=" . urlencode($topic["link_or_query"])) ?>">
