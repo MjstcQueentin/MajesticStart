@@ -21,7 +21,7 @@ class NewsAggregator
             // Write a new cache file if it was modified more than 15 minutes ago (or if it doesn't exist)
             $ch = curl_init($rss_link);
             curl_setopt_array($ch, [
-                CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Thunderbird/115.5.0",
+                CURLOPT_USERAGENT => "MajesticStart/" . MAJESTIC_START_VERSION,
                 CURLOPT_FAILONERROR => true,
                 CURLOPT_RETURNTRANSFER => true
             ]);
@@ -79,7 +79,7 @@ class NewsAggregator
                 // Chercher sur la page de destination
                 $ch = curl_init($item->link);
                 curl_setopt_array($ch, [
-                    CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/124.0.2",
+                    CURLOPT_USERAGENT => "MajesticStart/" . MAJESTIC_START_VERSION,
                     CURLOPT_FAILONERROR => true,
                     CURLOPT_RETURNTRANSFER => true
                 ]);
