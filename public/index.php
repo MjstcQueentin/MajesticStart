@@ -147,6 +147,7 @@ $planned_event = model('PlannedEventModel')->select_today();
         height: 150px;
         border-radius: 4px;
         background-size: cover;
+        background-position: center;
     }
 
     .news-block-item-caption {
