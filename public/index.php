@@ -366,7 +366,7 @@ $planned_event = model('PlannedEventModel')->select_today();
                             <div class="news-block-item-image" style="background-image: url(<?= $newsPiece["image"] ?>)"></div>
                             <div class="news-block-item-caption">
                                 <div class="news-block-item-caption-source mb-2">
-                                    <img alt="<?= $newsPiece["source"]["name"] ?>" src="<?= $newsPiece["source"]["logo"] ?>" <?php if ($newsPiece["source"]["logo_invertable"] == 1) echo 'class="invertable"' ?>>
+                                    <img src="<?= htmlspecialchars($newsPiece["source"]["logo_light"]) ?>" lightsrc="<?= htmlspecialchars($newsPiece["source"]["logo_light"]) ?>" darksrc="<?= htmlspecialchars($newsPiece["source"]["logo_dark"]) ?>" alt="<?= $newsPiece["source"]["name"] ?>">
                                     <small class="text-body-secondary ms-1" aria-label="<?= to_ago_str($newsPiece["pubDate"]) ?>" title="<?= to_ago_str($newsPiece["pubDate"]) ?>"><?= to_short_ago_str($newsPiece["pubDate"]) ?></small>
                                 </div>
                                 <h6> <?= htmlspecialchars($newsPiece["title"]) ?> </h6>
