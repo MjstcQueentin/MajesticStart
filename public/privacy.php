@@ -23,7 +23,7 @@ include(__DIR__ . "/../init.php");
     </section>
     <section class="container my-5">
         <h3>Introduction</h3>
-        <p>Majestic Start, comme l'ensemble des outils et services du projet Les Majesticiels, sont produits par un développeur français indépendant, dans un but non lucratif.</p>
+        <p>Majestic Start, comme l'ensemble des outils et services du projet Les Majesticiels, est produit par un développeur français indépendant, dans un but non lucratif.</p>
         <p>Le respect et la protection des données personnelles des usagers des Majesticiels est une priorité absolue, et à ce titre, tout sera mis en oeuvre pour garantir l'information, le respect du consentement et des droits des utilisateurs, selon les règles en vigueur dans l'Union Européenne.</p>
     </section>
     <section class="container my-5">
