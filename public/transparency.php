@@ -43,7 +43,7 @@ $sources = model("NewsSourceModel")->select_all();
         <div class="accordion" id="sourcesAccordion">
             <?php foreach ($sources as $index => $source): ?>
                 <?php
-                $feeds = model('NewsFeedModel')->select(['newssource_id' => $source['id'], 'access_ok' => 1]);
+                $feeds = model('NewsFeedModel')->select(['newssource_id' => $source['id']]);
                 ?>
                 <div class="accordion-item">
                     <h2 class="accordion-header">

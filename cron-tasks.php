@@ -32,6 +32,9 @@ foreach ($newsFeeds as $newsFeed) {
 
         // Insérer les articles nouvellement découverts dans la base de données
         $inserted = model('NewsPostModel')->insert($transformed);
+
+        // Marquer la source comme étant en fonction
+        model('NewsFeedModel')->update_one($newsFeed['uuid'], ["access_ok" => 1]);
     } catch (Exception $ex) {
         // En cas de problème avec un flux, marquer la source comme étant en panne
         model('NewsFeedModel')->update_one($newsFeed['uuid'], ["access_ok" => 0]);
