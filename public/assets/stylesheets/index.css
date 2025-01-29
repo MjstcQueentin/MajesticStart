@@ -1,3 +1,7 @@
+:root {
+    --mjstc-block-section-margin: 3rem;
+}
+
 #top {
     background-size: cover;
     background-position: center;
@@ -39,11 +43,11 @@ a.bookmark {
 }
 
 a.bookmark:first-child {
-    margin-left: 3rem;
+    margin-left: var(--mjstc-block-section-margin);
 }
 
 a.bookmark:last-child {
-    margin-right: 3rem;
+    margin-right: var(--mjstc-block-section-margin);
 }
 
 a.bookmark:hover {
@@ -70,11 +74,11 @@ a.bookmark:hover {
 }
 
 .weather-block:first-child {
-    margin-left: 3rem;
+    margin-left: var(--mjstc-block-section-margin);
 }
 
 .weather-block:last-child {
-    margin-right: 3rem;
+    margin-right: var(--mjstc-block-section-margin);
 }
 
 .weather-block.skeleton {
@@ -170,33 +174,51 @@ a.bookmark:hover {
 /* */
 @media only screen and (max-width: 576px) {
 
+    :root {
+        --mjstc-block-section-margin: .5rem;
+    }
+
     .me-5,
     .mx-5 {
-        margin-right: .5rem !important;
+        margin-right: var(--mjstc-block-section-margin) !important;
     }
 
     .ms-5,
     .mx-5 {
-        margin-left: .5rem !important;
-    }
-
-    a.bookmark:first-child {
-        margin-left: .5rem;
-    }
-
-    a.bookmark:last-child {
-        margin-right: .5rem;
-    }
-
-    .weather-block:first-child {
-        margin-left: .5rem;
-    }
-
-    .weather-block:last-child {
-        margin-right: .5rem;
+        margin-left: var(--mjstc-block-section-margin) !important;
     }
 
     .news-block-grid {
         grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media (pointer: fine) {
+    .bookmark-container {
+        overflow-x: hidden;
+        flex-wrap: wrap;
+        margin: 0 var(--mjstc-block-section-margin);
+    }
+
+    a.bookmark:first-child {
+        margin-left: 0;
+    }
+
+    a.bookmark:last-child {
+        margin-right: 0;
+    }
+
+    .weather-container {
+        overflow-x: hidden;
+        flex-wrap: wrap;
+        margin: 0 var(--mjstc-block-section-margin);
+    }
+
+    .weather-block:first-child {
+        margin-left: 0;
+    }
+
+    .weather-block:last-child {
+        margin-right: 0;
     }
 }
