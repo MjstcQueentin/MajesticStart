@@ -53,36 +53,36 @@ function to_ago_str(int $timestamp, bool $shorter = false): string
     if ($shorter) {
         if ($diff < 60) return $diff . "s";
 
-        $minutes = round($diff / 60);
+        $minutes = ceil($diff / 60);
         if ($minutes < 60) return $minutes . "m";
 
-        $hours = round($diff / 60 / 60);
+        $hours = ceil($diff / 60 / 60);
         if ($hours < 24) return $hours . "h";
 
-        $days = round($diff / 60 / 60 / 24);
+        $days = ceil($diff / 60 / 60 / 24);
         if ($days < 30) return $days . "j";
 
-        $months = round($diff / 60 / 60 / 24 / 30);
+        $months = ceil($diff / 60 / 60 / 24 / 30);
         if ($months < 12) "$months mois";
 
-        $years = round($diff / 60 / 60 / 24 / 365.25);
+        $years = ceil($diff / 60 / 60 / 24 / 365.25);
         return "$years an" . ($years > 1 ? "s" : "");
     } else {
         if ($diff < 60) return "Il y a $diff seconde" . ($diff > 1 ? "s" : "");
 
-        $minutes = round($diff / 60);
+        $minutes = ceil($diff / 60);
         if ($minutes < 60) return "Il y a $minutes minute" . ($minutes > 1 ? "s" : "");
 
-        $hours = round($diff / 60 / 60);
+        $hours = ceil($diff / 60 / 60);
         if ($hours < 24) return "Il y a $hours heure" . ($hours > 1 ? "s" : "");
 
-        $days = round($diff / 60 / 60 / 24);
+        $days = ceil($diff / 60 / 60 / 24);
         if ($days < 30) return "Il y a $days jour" . ($days > 1 ? "s" : "");
 
-        $months = round($diff / 60 / 60 / 24 / 30);
+        $months = ceil($diff / 60 / 60 / 24 / 30);
         if ($months < 12) "Il y a $months mois";
 
-        $years = round($diff / 60 / 60 / 24 / 365.25);
+        $years = ceil($diff / 60 / 60 / 24 / 365.25);
         return "Il y a $years année" . ($years > 1 ? "s" : "");
     }
 }
