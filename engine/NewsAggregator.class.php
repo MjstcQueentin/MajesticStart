@@ -9,38 +9,34 @@ class NewsAggregator
 {
     /**
      * Charge un flux RSS, le met en cache et retourne son contenu en SimpleXMLElement.
-     * @param string $source_uuid UUID de la source
+     * @param string $newsfeed_uuid UUID du flux
      * @param string $rss_link URI à partir de laquelle charger le flux
      * @throws RuntimeException When the source responds with an HTTP error and no cache is available
      * @return SimpleXMLElement
      */
-    public static function load_rss($source_uuid, $rss_link)
+    public static function load_rss($newsfeed_uuid, $rss_link)
     {
-        $cache_link = __DIR__ . "/raw-xml-cache/" . $source_uuid . ".xml";
-        if (!is_file($cache_link) || filemtime($cache_link) < (time() - (15 * 60))) {
-            // Write a new cache file if it was modified more than 15 minutes ago (or if it doesn't exist)
-            $ch = curl_init($rss_link);
-            curl_setopt_array($ch, [
-                CURLOPT_USERAGENT => "MajesticStart/" . MAJESTIC_START_VERSION,
-                CURLOPT_FAILONERROR => true,
-                CURLOPT_RETURNTRANSFER => true
-            ]);
-            $xml = curl_exec($ch);
+        $cache_link = __DIR__ . "/raw-xml-cache/" . $newsfeed_uuid . ".xml";
+        // Write a new cache file if it was modified more than 15 minutes ago (or if it doesn't exist)
+        $ch = curl_init($rss_link);
+        curl_setopt_array($ch, [
+            CURLOPT_USERAGENT => "MajesticStart/" . MAJESTIC_START_VERSION,
+            CURLOPT_FAILONERROR => true,
+            CURLOPT_RETURNTRANSFER => true
+        ]);
+        $xml = curl_exec($ch);
 
-            if (curl_errno($ch) != 0) {
-                // When the connection fails, use the cache when available
-                if (is_file($cache_link)) {
-                    $xml = file_get_contents($cache_link);
-                } else {
-                    throw new RuntimeException(curl_error($ch));
-                }
+        if (curl_errno($ch) != 0) {
+            // When the connection fails, use the cache when available
+            if (is_file($cache_link)) {
+                $xml = file_get_contents($cache_link);
+            } else {
+                throw new RuntimeException(curl_error($ch));
             }
-            curl_close($ch);
-
-            file_put_contents($cache_link, $xml);
-        } else {
-            $xml = file_get_contents($cache_link);
         }
+        curl_close($ch);
+
+        file_put_contents($cache_link, $xml);
 
         $xmlObject = new SimpleXMLElement($xml, LIBXML_NOCDATA);
         $namespaces = $xmlObject->getNameSpaces(true);
@@ -54,11 +50,11 @@ class NewsAggregator
     /**
      * Transforme des items d'un flux RSS en arrays standardisés.
      * @param SimpleXMLElement|SimpleXMLElement[] $channel_items Tableau d'éléments <item>
-     * @param array $source Objet source de laquelle proviennent les items
+     * @param array $newsfeed_uuid UUID du flux fournissant les items
      * @param int $max_items 
      * @return array
      */
-    public static function transform($channel_items = [], $source = [], $max_items = 12)
+    public static function transform($channel_items, $newsfeed_uuid, $max_items = 12)
     {
         $transformed = [];
 
@@ -87,7 +83,7 @@ class NewsAggregator
 
                 if (!empty($html) && $html !== false) {
                     $page = new DOMDocument();
-                    @$page->loadHTML($html);
+                    $page->loadHTML($html);
                     $finder = new DOMXPath($page);
 
                     // Tenter avec OpenGraph
@@ -106,12 +102,13 @@ class NewsAggregator
             }
 
             $transformed[] = [
+                "guid" => time(),
+                "newsfeed_uuid" => $newsfeed_uuid,
                 "title" => strval($item->title),
                 "description" => strip_tags(strval($item->description)),
-                "pubDate" => DateTime::createFromFormat('D, d M Y H:i:s O', strval($item->pubDate))->format('U'), // Sun, 26 Nov 2023 16:45:30 +0100
-                "link" => strval($item->link),
-                "image" => strval($image_src),
-                "source" => $source
+                "thumbnail_src" => strval($image_src),
+                "publication_date" => DateTime::createFromFormat('D, d M Y H:i:s O', strval($item->pubDate))->format('Y-m-d H:i:s'), // Sun, 26 Nov 2023 16:45:30 +0100
+                "link" => strval($item->link)
             ];
 
             if (count($transformed) >= $max_items) break;
@@ -126,6 +123,7 @@ class NewsAggregator
      * @param string $category_uuid UUID de la catégorie
      * @param array $transformed_items Tableau d'éléments transformés
      * @return array
+     * @deprecated On privilégiera l'usage de la table 'newspost' pour la mise en cache des articles
      */
     public static function aggregate($category_uuid, &$transformed_items)
     {
@@ -145,6 +143,7 @@ class NewsAggregator
      * Vérifie si la catégorie est mise en cache depuis moins de 15 minutes.
      * @param string $category_uuid UUID de la catégorie
      * @return bool TRUE si la catégorie a été mise en cache depuis moins de 15 minutes, FALSE sinon.
+     * @deprecated On privilégiera l'usage de la table 'newspost' pour la mise en cache des articles
      */
     public static function is_cached($category_uuid)
     {
@@ -160,6 +159,7 @@ class NewsAggregator
      * Si la catégorie n'a pas de cache, la fonction retourne un tableau vide.
      * @param string $category_uuid UUID de la catégorie
      * @return array
+     * @deprecated On privilégiera l'usage de la table 'newspost' pour la mise en cache des articles
      */
     public static function get_cache($category_uuid)
     {

@@ -3,6 +3,8 @@ include(__DIR__ . "/../init.php");
 
 $settings = model('SettingModel')->select_all();
 $topics = model('TopicModel')->select_all(["is_official" => "DESC", "is_featured" => "DESC"]);
+$planned_event = model('PlannedEventModel')->select_today();
+
 if (SessionUtils::is_logged_in()) {
     $user = model('UserModel')->select_one($_SESSION["user"]["uuid"]);
     $user["set_newscategories"] =  !empty($user["set_newscategories"]) ? json_decode($user["set_newscategories"]) : [];
@@ -17,16 +19,6 @@ if (SessionUtils::is_logged_in()) {
     $bookmarks = model('BookmarkModel')->select(["user_id" => null]);
     $categories = model('NewsCategoryModel')->select_all(["display_order" => "ASC"]);
 }
-
-foreach ($categories as $category_key => $category) {
-    $categories[$category_key]["news"] = NewsAggregator::get_cache($category["uuid"]);
-
-    if (count($categories[$category_key]["news"]) > 12) {
-        array_splice($categories[$category_key]["news"], 12);
-    }
-}
-
-$planned_event = model('PlannedEventModel')->select_today();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -349,6 +341,9 @@ $planned_event = model('PlannedEventModel')->select_today();
         </div>
     </div>
     <?php foreach ($categories as $category) : ?>
+        <?php 
+            $category["news"] = model('NewsPostModel')->select_of_category($category["uuid"], 12);
+        ?>
         <div class="mx-5 my-4 news-block">
             <div class="news-block-title">
                 <h2><?= htmlspecialchars($category["title_fr"]) ?></h2>
@@ -362,15 +357,24 @@ $planned_event = model('PlannedEventModel')->select_today();
                 </div>
             <?php else : ?>
                 <div class="news-block-grid">
-                    <?php foreach ($category["news"] as $newsPiece) : ?>
-                        <a class="news-block-item bg-body-secondary" href="<?= $newsPiece["link"] ?>" target="_blank" rel="noopener noreferrer">
-                            <div class="news-block-item-image" style="background-image: url(<?= $newsPiece["image"] ?>)"></div>
+                    <?php foreach ($category["news"] as $newsPost) : ?>
+                        <a class="news-block-item bg-body-secondary" href="<?= $newsPost["link"] ?>" target="_blank" rel="noopener noreferrer">
+                            <div class="news-block-item-image" style="background-image: url(<?= $newsPost["thumbnail_src"] ?>)"></div>
                             <div class="news-block-item-caption">
                                 <div class="news-block-item-caption-source mb-2">
-                                    <img src="<?= htmlspecialchars($newsPiece["source"]["logo_light"]) ?>" lightsrc="<?= htmlspecialchars($newsPiece["source"]["logo_light"]) ?>" darksrc="<?= htmlspecialchars($newsPiece["source"]["logo_dark"]) ?>" alt="<?= $newsPiece["source"]["name"] ?>">
-                                    <small class="text-body-secondary ms-1" aria-label="<?= to_ago_str($newsPiece["pubDate"]) ?>" title="<?= to_ago_str($newsPiece["pubDate"]) ?>"><?= to_short_ago_str($newsPiece["pubDate"]) ?></small>
+                                    <img 
+                                        src="<?= htmlspecialchars($newsPost["newssource_logo_light"]) ?>" 
+                                        lightsrc="<?= htmlspecialchars($newsPost["newssource_logo_light"]) ?>" 
+                                        darksrc="<?= htmlspecialchars($newsPost["newssource_logo_dark"]) ?>" 
+                                        alt="<?= $newsPiece["newssource_name"] ?>">
+                                    <small 
+                                        class="text-body-secondary ms-1" 
+                                        aria-label="<?= to_ago_str(strtotime($newsPost["publication_date"])) ?>" 
+                                        title="<?= to_ago_str(strtotime($newsPost["publication_date"])) ?>">
+                                        <?= to_ago_str(strtotime($newsPost["publication_date"]), true) ?>
+                                    </small>
                                 </div>
-                                <h6> <?= htmlspecialchars($newsPiece["title"]) ?> </h6>
+                                <h6><?= htmlspecialchars($newsPost["title"]) ?></h6>
                             </div>
                         </a>
                     <?php endforeach; ?>

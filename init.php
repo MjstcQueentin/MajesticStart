@@ -29,50 +29,60 @@ set_exception_handler(function ($ex) {
 
 /**
  * Get a model instance
- * @param class-string<DatabaseQuerier>|string $modelName
- * @return DatabaseQuerier|null
- * @phpstan-return ($modelName is class-string<DatabaseQuerier> ? ModelTemplate : object|null)
+ * @template T
+ * @param class-string<T> $modelName
+ * @return T
  */
-function model(string $modelName)
+function model(string $modelName): ?object
 {
     require_once(__DIR__ . "/database/models/$modelName.class.php");
-    return new $modelName();
+    $model = new $modelName();
+
+    if ($model instanceof $modelName) {
+        return $model;
+    }
+
+    return null;
 }
 
-function to_ago_str($timestamp)
+function to_ago_str(int $timestamp, bool $shorter = false): string
 {
     $now = time();
     $diff = $now - $timestamp;
-    if ($diff < 60) return "Il y a $diff seconde" . ($diff > 1 ? "s" : "");
 
-    $minutes = round($diff / 60);
-    if ($minutes < 60) return "Il y a $minutes minute" . ($minutes > 1 ? "s" : "");
+    if ($shorter) {
+        if ($diff < 60) return $diff . "s";
 
-    $hours = round($diff / 60 / 60);
-    if ($hours < 24) return "Il y a $hours heure" . ($hours > 1 ? "s" : "");
+        $minutes = round($diff / 60);
+        if ($minutes < 60) return $minutes . "m";
 
-    $days = round($diff / 60 / 60 / 24);
-    if ($days < 30) return "Il y a $days jour" . ($days > 1 ? "s" : "");
+        $hours = round($diff / 60 / 60);
+        if ($hours < 24) return $hours . "h";
 
-    $months = round($diff / 60 / 60 / 24 / 12);
-    return "Il y a $months mois";
-}
+        $days = round($diff / 60 / 60 / 24);
+        if ($days < 30) return $days . "j";
 
-function to_short_ago_str($timestamp)
-{
-    $now = time();
-    $diff = $now - $timestamp;
-    if ($diff < 60) return $diff . "s";
+        $months = round($diff / 60 / 60 / 24 / 30);
+        if ($months < 12) "$months mois";
 
-    $minutes = round($diff / 60);
-    if ($minutes < 60) return $minutes . "m";
+        $years = round($diff / 60 / 60 / 24 / 365.25);
+        return "$years an" . ($years > 1 ? "s" : "");
+    } else {
+        if ($diff < 60) return "Il y a $diff seconde" . ($diff > 1 ? "s" : "");
 
-    $hours = round($diff / 60 / 60);
-    if ($hours < 24) return $hours . "h";
+        $minutes = round($diff / 60);
+        if ($minutes < 60) return "Il y a $minutes minute" . ($minutes > 1 ? "s" : "");
 
-    $days = round($diff / 60 / 60 / 24);
-    if ($days < 30) return $days . "j";
+        $hours = round($diff / 60 / 60);
+        if ($hours < 24) return "Il y a $hours heure" . ($hours > 1 ? "s" : "");
 
-    $months = round($diff / 60 / 60 / 24 / 12);
-    return "$months mois";
+        $days = round($diff / 60 / 60 / 24);
+        if ($days < 30) return "Il y a $days jour" . ($days > 1 ? "s" : "");
+
+        $months = round($diff / 60 / 60 / 24 / 30);
+        if ($months < 12) "Il y a $months mois";
+
+        $years = round($diff / 60 / 60 / 24 / 365.25);
+        return "Il y a $years année" . ($years > 1 ? "s" : "");
+    }
 }

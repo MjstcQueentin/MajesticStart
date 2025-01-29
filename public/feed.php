@@ -9,7 +9,7 @@ if (empty($_GET["category"])) {
 
 $settings = model('SettingModel')->select_all();
 $category = model('NewsCategoryModel')->select_one($_GET["category"]);
-$news = NewsAggregator::get_cache($_GET["category"]);
+$news = model('NewsPostModel')->select_of_category($_GET["category"]);
 
 if (empty($category) || empty($news)) {
     header("Location: /");
@@ -106,15 +106,24 @@ if (empty($category) || empty($news)) {
     </div>
 
     <div id="feed" class="container mb-5">
-        <?php foreach ($news as $article) : ?>
-            <a class="news-article bg-body-tertiary" href="<?= htmlspecialchars($article["link"], ENT_COMPAT) ?>">
-                <div class="news-article-image" style="background-image: url(<?= htmlspecialchars($article["image"], ENT_COMPAT) ?>)"></div>
+        <?php foreach ($news as $newsPost) : ?>
+            <a class="news-article bg-body-tertiary" href="<?= htmlspecialchars($newsPost["link"]) ?>">
+                <div class="news-article-image" style="background-image: url(<?= htmlspecialchars($newsPost["thumbnail_src"]) ?>)"></div>
                 <div class="news-article-text">
-                    <h3><?= htmlspecialchars($article["title"]) ?></h3>
-                    <p><?= htmlspecialchars($article["description"]) ?></p>
+                    <h3><?= htmlspecialchars($newsPost["title"]) ?></h3>
+                    <p><?= htmlspecialchars($newsPost["description"]) ?></p>
                     <div class="news-article-metadata">
-                        <img src="<?= htmlspecialchars($article["source"]["logo_light"]) ?>" lightsrc="<?= htmlspecialchars($article["source"]["logo_light"]) ?>" darksrc="<?= htmlspecialchars($article["source"]["logo_dark"]) ?>" alt="<?= htmlspecialchars($article["source"]["name"], ENT_COMPAT) ?>">
-                        <small class="text-body-secondary" aria-label="<?= to_ago_str($article["pubDate"]) ?>" title="<?= to_ago_str($article["pubDate"]) ?>"><?= to_ago_str($article["pubDate"]) ?></small>
+                        <img
+                            src="<?= htmlspecialchars($newsPost["newssource_logo_light"]) ?>"
+                            lightsrc="<?= htmlspecialchars($newsPost["newssource_logo_light"]) ?>"
+                            darksrc="<?= htmlspecialchars($newsPost["newssource_logo_dark"]) ?>"
+                            alt="<?= htmlspecialchars($newsPost["newssource_name"]) ?>">
+                        <small
+                            class="text-body-secondary"
+                            aria-label="<?= to_ago_str(strtotime($newsPost["publication_date"])) ?>"
+                            title="<?= to_ago_str(strtotime($newsPost["publication_date"])) ?>">
+                            <?= to_ago_str(strtotime($newsPost["publication_date"])) ?>
+                        </small>
                     </div>
                 </div>
             </a>
