@@ -11,27 +11,30 @@ class TemplateEngine
     {
         $template_html = file_get_contents(self::TEMPLATEDIR . "/" . $template_name . ".html");
         foreach ($template_params as $key => $value) {
-            $template_html = str_replace("{{".$key."}}", $value, $template_html);
+            $template_html = str_replace("{{" . $key . "}}", $value, $template_html);
         }
 
         return $template_html;
     }
 
-    public static function head($title = "Majestic Start")
+    public static function head($title = "Majestic Start", $css = [])
     {
         return self::template("head", [
-            "title" => $title
+            "title" => $title,
+            "additional_tags" => implode(PHP_EOL, array_map(function ($item) {
+                return '<link rel="stylesheet" href="' . htmlspecialchars($item) . '">';
+            }, $css))
         ]);
     }
 
     public static function header($title = null)
     {
-        if(!isset($title)) $title = datefmt_format(datefmt_create("fr-FR", IntlDateFormatter::FULL, IntlDateFormatter::NONE), new DateTime()); // date('l d F o');
-        
+        if (!isset($title)) $title = datefmt_format(datefmt_create("fr-FR", IntlDateFormatter::FULL, IntlDateFormatter::NONE), new DateTime()); // date('l d F o');
+
         global $errors;
         $errors_dump = "<script>";
-        foreach($errors as $error_str) {
-            $errors_dump .= 'console.warn("'.$error_str.'");'.PHP_EOL;
+        foreach ($errors as $error_str) {
+            $errors_dump .= 'console.warn("' . $error_str . '");' . PHP_EOL;
         }
         $errors_dump .= "</script>";
 
@@ -50,7 +53,8 @@ class TemplateEngine
         ]);
     }
 
-    public static function error($errstr) {
+    public static function error($errstr)
+    {
         return self::template("error", [
             "errstr" => nl2br($errstr)
         ]);
