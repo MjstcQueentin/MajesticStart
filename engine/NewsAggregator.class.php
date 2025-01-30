@@ -107,7 +107,7 @@ class NewsAggregator
                 "title" => strval($item->title),
                 "description" => strip_tags(strval($item->description)),
                 "thumbnail_src" => strval($image_src),
-                "publication_date" => DateTime::createFromFormat('D, d M Y H:i:s O', strval($item->pubDate))->format('Y-m-d H:i:s'), // Sun, 26 Nov 2023 16:45:30 +0100
+                "publication_date" => date('Y-m-d H:i:s', strtotime(strval($item->pubDate))), // Sun, 26 Nov 2023 16:45:30 +0100
                 "link" => strval($item->link)
             ];
 
