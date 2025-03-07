@@ -181,7 +181,7 @@ if (SessionUtils::is_logged_in()) {
                 <div class="news-block-grid">
                     <?php foreach ($category["news"] as $newsPost) : ?>
                         <a class="news-block-item bg-body-secondary" href="<?= $newsPost["link"] ?>" target="_blank" rel="noopener noreferrer">
-                            <div class="news-block-item-image" style="background-image: url(<?= $newsPost["thumbnail_src"] ?>)"></div>
+                            <div class="news-block-item-image" style="background-image: url('<?= $newsPost["thumbnail_src"] ?>')"></div>
                             <div class="news-block-item-caption">
                                 <div class="news-block-item-caption-source mb-2">
                                     <img

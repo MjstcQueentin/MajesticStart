@@ -111,7 +111,7 @@ header('Cache-Control: max-age=3600');
     <div id="feed" class="container mb-5">
         <?php foreach ($news as $newsPost) : ?>
             <a class="news-article bg-body-tertiary" href="<?= htmlspecialchars($newsPost["link"]) ?>">
-                <div class="news-article-image" style="background-image: url(<?= htmlspecialchars($newsPost["thumbnail_src"]) ?>)"></div>
+                <div class="news-article-image" style="background-image: url('<?= htmlspecialchars($newsPost["thumbnail_src"]) ?>')"></div>
                 <div class="news-article-text">
                     <h3><?= htmlspecialchars($newsPost["title"]) ?></h3>
                     <p><?= htmlspecialchars($newsPost["description"]) ?></p>
