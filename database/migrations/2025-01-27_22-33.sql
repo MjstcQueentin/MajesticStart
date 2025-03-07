@@ -1,10 +1,10 @@
 -- Une source correspond à un organe de presse, qui peut distribuer un ou plusieurs fluxs.
 
 -- Les anciennes sources deviennent des fluxs
-RENAME TABLE `homepage`.`newssource` TO `homepage`.`newsfeed`; 
+RENAME TABLE `newssource` TO `newsfeed`; 
 
 -- Créer la nouvelle table des sources
-CREATE TABLE `homepage`.`newssource` (
+CREATE TABLE `newssource` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` TEXT NOT NULL,
     `logo_light` TEXT NOT NULL,
@@ -35,7 +35,7 @@ RENAME TABLE `newscategory_has_newssource` TO `newscategory_has_newsfeed`;
 ALTER TABLE `newscategory_has_newssource` CHANGE `newssource_uuid` `newsfeed_uuid` VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL; 
 
 -- Créer la table des articles
-CREATE TABLE `homepage`.`newspost` (
+CREATE TABLE `newspost` (
     `guid` VARCHAR(255) NOT NULL,
     `newsfeed_uuid` VARCHAR(36) NOT NULL,
     `title` TEXT NOT NULL,
