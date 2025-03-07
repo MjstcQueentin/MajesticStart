@@ -3,6 +3,7 @@ include(__DIR__ . "/../init.php");
 if (!SessionUtils::is_logged_in()) {
     http_response_code(307);
     header('Location: /login.php');
+    return;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -13,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     http_response_code(307);
     header('Location: /');
+    return;
 }
 
 $user = model("UserModel")->select_one($_SESSION["user_uuid"]);
