@@ -99,47 +99,52 @@ if (SessionUtils::is_logged_in()) {
             <?php endforeach; ?>
         </div>
     </div>
-    <div id="weather" class="my-4">
-        <div class="ms-5 d-flex flex-row gap-4 align-items-baseline">
-            <div class="d-flex flex-row gap-4 align-items-center">
-                <h2 class="m-0">Météo</h2>
-                <img id="weather-logo" src="/assets/logos/openweather_white_cropped.png" lightsrc="/assets/logos/openweather_black_cropped.png" darksrc="/assets/logos/openweather_white_cropped.png" alt="OpenWeatherMap" height="28">
+    
+    <?php if (OpenWeatherMap::isConfigured()) : ?>
+        <div id="weather" class="my-4">
+            <div class="ms-5 d-flex flex-row gap-4 align-items-baseline">
+                <div class="d-flex flex-row gap-4 align-items-center">
+                    <h2 class="m-0">Météo</h2>
+                    <img id="weather-logo" src="/assets/logos/openweather_white_cropped.png" lightsrc="/assets/logos/openweather_black_cropped.png" darksrc="/assets/logos/openweather_white_cropped.png" alt="OpenWeatherMap" height="28">
+                </div>
+                <p class="text-muted m-0 d-none"><i class="bi bi-geo-alt"></i> Ville</p>
             </div>
-            <p class="text-muted m-0 d-none"><i class="bi bi-geo-alt"></i> Ville</p>
+            <div class="weather-container">
+                <div class="weather-block skeleton">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="weather-block skeleton">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="weather-block skeleton">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="weather-block skeleton">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="weather-block skeleton">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="weather-block skeleton">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="weather-container">
-            <div class="weather-block skeleton">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                </div>
-            </div>
-            <div class="weather-block skeleton">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                </div>
-            </div>
-            <div class="weather-block skeleton">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                </div>
-            </div>
-            <div class="weather-block skeleton">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                </div>
-            </div>
-            <div class="weather-block skeleton">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                </div>
-            </div>
-            <div class="weather-block skeleton">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Chargement...</span>
-                </div>
-            </div>
-        </div>
-    </div>
+        <script src="/assets/scripts/index-weather.js"></script>
+    <?php endif; ?>
+
     <?php foreach ($categories as $category) : ?>
         <?php
         $category["news"] = model('NewsPostModel')->select_of_category($category["uuid"], 12);
@@ -183,7 +188,6 @@ if (SessionUtils::is_logged_in()) {
         </div>
     <?php endforeach; ?>
     <?= TemplateEngine::footer() ?>
-    <script src="/assets/scripts/index-weather.js"></script>
     <script>
         function refreshColorMode() {
             var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

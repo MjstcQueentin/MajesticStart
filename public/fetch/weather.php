@@ -1,6 +1,11 @@
 <?php
 include(__DIR__ . "/../../init.php");
 
+if (!OpenWeatherMap::isConfigured()) {
+    http_response_code(500);
+    exit;
+}
+
 if (!isset($_GET["lat"]) || !isset($_GET["lon"])) {
     http_response_code(400);
     exit;
@@ -22,7 +27,7 @@ foreach ($forecast["list"] as $item) {
         "item_nb" => 1
     ];
 
-    if(in_array($translated_item["day"], array_column($return["forecast"], "day"))) {
+    if (in_array($translated_item["day"], array_column($return["forecast"], "day"))) {
         $key = array_search($translated_item["day"], array_column($return["forecast"], "day"));
         $return["forecast"][$key]["temp"] += $translated_item["temp"];
         $return["forecast"][$key]["item_nb"] += 1;
@@ -62,7 +67,7 @@ foreach ($forecast["list"] as $item) {
     $return["forecast"][] = $translated_item;
 }
 
-foreach($return["forecast"] as $key => $forecast_item) {
+foreach ($return["forecast"] as $key => $forecast_item) {
     $return["forecast"][$key]["temp"] = intval($forecast_item["temp"] / $forecast_item["item_nb"]);
     unset($return["forecast"][$key]["item_nb"]);
 }
