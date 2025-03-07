@@ -4,18 +4,19 @@ include(__DIR__ . "/../init.php");
 $settings = model('SettingModel')->select_all();
 $topics = model('TopicModel')->select_all(["is_official" => "DESC", "is_featured" => "DESC"]);
 $planned_event = model('PlannedEventModel')->select_today();
+$search_engines = model('SearchEngineModel')->select_all();
 
 if (SessionUtils::is_logged_in()) {
     $user = model('UserModel')->select_one($_SESSION["user"]["uuid"]);
     $user["set_newscategories"] =  !empty($user["set_newscategories"]) ? json_decode($user["set_newscategories"]) : [];
 
-    $searchengine = model('SearchEngineModel')->select_one($user["set_searchengine"] ?? $settings["default_searchengine"]);
+    $searchengine = model('SearchEngineModel')->select_one($user["set_searchengine"] ?? $_COOKIE['start-search-engine-id'] ?? $settings["default_searchengine"]);
     $bookmarks = model('BookmarkModel')->select(["user_id" => $_SESSION["user"]["uuid"]]);
     $categories = !empty($user["set_newscategories"])
         ? model('NewsCategoryModel')->select(["uuid" => $user["set_newscategories"]], ["display_order" => "ASC"])
         : model('NewsCategoryModel')->select_all(["display_order" => "ASC"]);
 } else {
-    $searchengine = model('SearchEngineModel')->select_one($settings["default_searchengine"]);
+    $searchengine = model('SearchEngineModel')->select_one($_COOKIE['start-search-engine-id'] ?? $settings["default_searchengine"]);
     $bookmarks = model('BookmarkModel')->select(["user_id" => null]);
     $categories = model('NewsCategoryModel')->select_all(["display_order" => "ASC"]);
 }
@@ -36,15 +37,31 @@ header('Cache-Control: max-age=3600');
     <div id="top" class="shadow">
         <div></div>
         <div class="top-search-bar">
-            <form action="<?= $searchengine["result_url"] ?>" class="mb-1">
+            <form id="search-bar" action="<?= $searchengine["result_url"] ?>" class="mb-1">
                 <div class="input-group input-group-lg">
-                    <span class="input-group-text bg-body border-end-0" id="provider-logo">
-                        <img src="<?= $searchengine["icon"] ?>" alt="<?= $searchengine["name"] ?>" height="24">
-                    </span>
-                    <input type="text" name="<?= $searchengine["query_param"] ?>" autofocus required class="form-control border-start-0 border-end-0" placeholder="Rechercher avec <?= $searchengine["name"] ?>" aria-label="Termes de recherches" aria-describedby="provider-logo">
+                    <button class="btn btn-lg btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="<?= $searchengine["icon"] ?>" alt="<?= $searchengine["name"] ?>" class="align-text-top" height="24" width="24">
+                    </button>
+                    <ul class="dropdown-menu shadow">
+                        <li>
+                            <h6 class="dropdown-header">Changer de moteur de recherche</h6>
+                        </li>
+                        <?php foreach ($search_engines as $item): ?>
+                            <li>
+                                <button type="button" class="dropdown-item" data-trigger="search-engine-change" data-search-id="<?= htmlspecialchars($item['uuid']) ?>">
+                                    <img src="<?= $item["icon"] ?>" alt="" class="align-baseline" height="12">
+                                    <?= htmlspecialchars($item['name']) ?>
+                                </button>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+
+                    <input type="text" name="<?= $searchengine["query_param"] ?>" autofocus required class="form-control border-start-0 border-end-0" placeholder="Rechercher avec <?= $searchengine["name"] ?>" aria-label="Termes de recherches">
                     <button class="btn btn-<?= $_COOKIE['bs-theme'] ?? 'light' ?> border-top border-bottom border-end" type="submit" aria-label="Lancer la recherche"><i class="bi bi-search"></i></button>
                 </div>
             </form>
+            <script src="/assets/scripts/index-search.js"></script>
+
             <div class="d-flex flex-row flex-wrap gap-1">
                 <?php if (!empty($planned_event)): ?>
                     <a class="btn btn-sm btn-info" target="_blank" rel="noopener noreferrer" href="<?= $planned_event['picture_author_url'] ?>" title="Auteur de la photo">
@@ -101,7 +118,7 @@ header('Cache-Control: max-age=3600');
             <?php endforeach; ?>
         </div>
     </div>
-    
+
     <?php if (OpenWeatherMap::isConfigured()) : ?>
         <div id="weather" class="my-4">
             <div class="ms-5 d-flex flex-row gap-4 align-items-baseline">
