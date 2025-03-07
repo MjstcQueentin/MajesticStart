@@ -47,7 +47,7 @@ if (SessionUtils::is_logged_in()) {
                         <?php foreach ($search_engines as $item): ?>
                             <li>
                                 <button type="button" class="dropdown-item" data-trigger="search-engine-change" data-search-id="<?= htmlspecialchars($item['uuid']) ?>">
-                                    <img src="<?= $item["icon"] ?>" alt="" class="align-baseline" height="12">
+                                    <img src="<?= $item["icon"] ?>" alt="" class="align-baseline me-1" height="12" width="12">
                                     <?= htmlspecialchars($item['name']) ?>
                                 </button>
                             </li>
