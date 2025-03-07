@@ -42,7 +42,9 @@ class TemplateEngine
         return self::template((SessionUtils::is_logged_in() ? "header_session" : "header"), [
             "title" => $title,
             "errors_dump" => $errors_dump,
-            "user_name" => SessionUtils::is_logged_in() ? $_SESSION["user"]["name"] : ""
+            "user_name" => SessionUtils::is_logged_in() ? $_SESSION["user"]["name"] : "",
+            "user_email" => SessionUtils::is_logged_in() ? $_SESSION["user"]["primary_email"] : "",
+            "user_photo" => SessionUtils::is_logged_in() ? SessionUtils::profile_picture() : ""
         ]);
     }
 
