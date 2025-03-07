@@ -3,8 +3,9 @@ include(__DIR__ . "/../init.php");
 
 // If no category, redirect to the homepage
 if (empty($_GET["category"])) {
-    header("Location: /");
     http_response_code(307);
+    header("Location: /");
+    return;
 }
 
 $settings = model('SettingModel')->select_all();
@@ -12,8 +13,9 @@ $category = model('NewsCategoryModel')->select_one($_GET["category"]);
 $news = model('NewsPostModel')->select_of_category($_GET["category"]);
 
 if (empty($category) || empty($news)) {
-    header("Location: /");
     http_response_code(307);
+    header("Location: /");
+    return;
 }
 
 ?>
