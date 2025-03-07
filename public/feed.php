@@ -18,6 +18,7 @@ if (empty($category) || empty($news)) {
     return;
 }
 
+header('Cache-Control: max-age=3600');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
