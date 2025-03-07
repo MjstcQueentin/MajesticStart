@@ -20,8 +20,6 @@ if (SessionUtils::is_logged_in()) {
     $bookmarks = model('BookmarkModel')->select(["user_id" => null]);
     $categories = model('NewsCategoryModel')->select_all(["display_order" => "ASC"]);
 }
-
-header('Cache-Control: max-age=3600');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
