@@ -4,6 +4,7 @@ class SessionUtils
 {
     public static function is_logged_in()
     {
+        if (defined("MAJESTICLOUD_ENABLE") && MAJESTICLOUD_ENABLE == false) return false;
         return session_status() == PHP_SESSION_ACTIVE && !empty($_SESSION["user_uuid"]);
     }
 
@@ -70,7 +71,8 @@ class SessionUtils
         return "data:" . curl_getinfo($ch, CURLINFO_CONTENT_TYPE) . ";base64," . base64_encode($response);
     }
 
-    public static function destroy() {
+    public static function destroy()
+    {
         $ch = curl_init(MAJESTICLOUD_URI . "/session/current.php");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,

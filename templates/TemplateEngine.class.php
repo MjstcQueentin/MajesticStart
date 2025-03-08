@@ -32,19 +32,33 @@ class TemplateEngine
         if (!isset($title)) $title = datefmt_format(datefmt_create("fr-FR", IntlDateFormatter::FULL, IntlDateFormatter::NONE), new DateTime()); // date('l d F o');
 
         global $errors;
-        $errors_dump = "<script>";
-        foreach ($errors as $error_str) {
-            $errors_dump .= 'console.warn("' . $error_str . '");' . PHP_EOL;
+        if (ENVIRONMENT == "prod") {
+            $errors_dump = "<script>";
+            foreach ($errors as $error_str) {
+                $errors_dump .= 'console.warn("' . htmlspecialchars($error_str) . '");' . PHP_EOL;
+            }
+            $errors_dump .= "</script>";
+        } else {
+            $errors_dump = "";
         }
-        $errors_dump .= "</script>";
 
+        $account_menu = "";
+        if (defined("MAJESTICLOUD_ENABLE") && MAJESTICLOUD_ENABLE == false) {
+            $account_menu = '<div></div>';
+        } else if (!defined("MAJESICLOUD_ENABLE") || MAJESTICLOUD_ENABLE == true) {
+            $account_menu = SessionUtils::is_logged_in()
+                ? self::template("header_session_on", [
+                    "user_name" => $_SESSION["user"]["name"],
+                    "user_email" => $_SESSION["user"]["primary_email"],
+                    "user_photo" => SessionUtils::profile_picture()
+                ])
+                : self::template("header_session_off");
+        }
 
-        return self::template((SessionUtils::is_logged_in() ? "header_session" : "header"), [
+        return self::template("header", [
             "title" => $title,
             "errors_dump" => $errors_dump,
-            "user_name" => SessionUtils::is_logged_in() ? $_SESSION["user"]["name"] : "",
-            "user_email" => SessionUtils::is_logged_in() ? $_SESSION["user"]["primary_email"] : "",
-            "user_photo" => SessionUtils::is_logged_in() ? SessionUtils::profile_picture() : ""
+            "majesticloud_account_menu" => $account_menu
         ]);
     }
 

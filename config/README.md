@@ -15,6 +15,7 @@ define("DATABASE", [
 
 define('WEATHER_APIKEY', 'dummy');
 
+define('MAJESTICLOUD_ENABLE', true);
 define('MAJESTICLOUD_URI', 'http://api.cloud.lesmajesticiels.localhost');
 define('MAJESTICLOUD_USER_URI', 'http://cloud.lesmajesticiels.localhost');
 define('MAJESTICLOUD_CLIENT_ID', 'dummy123-4567-89ab-cdef-hijklmnopqrs');
