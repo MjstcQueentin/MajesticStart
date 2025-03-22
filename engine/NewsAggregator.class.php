@@ -20,7 +20,7 @@ class NewsAggregator
         // Write a new cache file if it was modified more than 15 minutes ago (or if it doesn't exist)
         $ch = curl_init($rss_link);
         curl_setopt_array($ch, [
-            CURLOPT_USERAGENT => "MajesticStart/" . MAJESTIC_START_VERSION,
+            CURLOPT_USERAGENT => "curl/" . curl_version()['version'] . " (MajesticStart/" . MAJESTIC_START_VERSION . '; +' . ENVIRONMENT_ROOT.') Bot',
             CURLOPT_FAILONERROR => true,
             CURLOPT_RETURNTRANSFER => true
         ]);
