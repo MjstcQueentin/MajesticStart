@@ -20,7 +20,7 @@ async function setSearchEngine(searchEngineId) {
         input.setAttribute("name", searchEngine.query_param);
         input.setAttribute("placeholder", `Rechercher avec ${searchEngine.name}`);
 
-        document.cookie = `start-search-engine-id=${searchEngineId}; path=/`;
+        document.cookie = `start-search-engine-id=${searchEngineId};path=/;max-age=31536000`;
     } else {
         alert("Désolé, une erreur est survenue.");
     }
