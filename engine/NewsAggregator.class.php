@@ -20,11 +20,16 @@ class NewsAggregator
         // Write a new cache file if it was modified more than 15 minutes ago (or if it doesn't exist)
         $ch = curl_init($rss_link);
         curl_setopt_array($ch, [
-            CURLOPT_USERAGENT => "curl/" . curl_version()['version'] . " (MajesticStart/" . MAJESTIC_START_VERSION . '; +' . ENVIRONMENT_ROOT.') Bot',
             CURLOPT_FAILONERROR => true,
             CURLOPT_RETURNTRANSFER => true
         ]);
         $xml = curl_exec($ch);
+
+        // If the server responds with a 403 error, try again with the user agent
+        if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 403) {
+            curl_setopt($ch, CURLOPT_USERAGENT, sprintf("curl/%s (MajesticStart/%s; +%s) Bot", curl_version()['version'], MAJESTIC_START_VERSION, ENVIRONMENT_ROOT));
+            $xml = curl_exec($ch);
+        }
 
         if (curl_errno($ch) != 0) {
             // When the connection fails, use the cache when available
