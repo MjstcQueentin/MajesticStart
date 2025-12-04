@@ -1,7 +1,10 @@
 <?php
-ini_set('session.gc_maxlifetime', 604800);
-session_set_cookie_params(604800);
-session_start();
+session_start([
+    "cookie_lifetime" => 604800,
+    "cookie_secure" => true,
+    "cookie_httponly" => true,
+    "cookie_samesite" => "Lax"
+]);
 
 global $errors;
 $errors = [];
