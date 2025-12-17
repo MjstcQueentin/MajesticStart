@@ -102,6 +102,13 @@ class NewsAggregator
                     if ($image_src === false) {
                         // Image de secours
                         $image_src = "/assets/fallback-image.png";
+                    } else {
+                        // Convertir l'image en URL data:
+                        $image_data = file_get_contents($image_src);
+                        if ($image_data !== false) {
+                            $image_mime = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $image_data);
+                            $image_src = "data:" . $image_mime . ";base64," . base64_encode($image_data);
+                        }
                     }
                 }
             }
