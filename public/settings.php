@@ -45,6 +45,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                     <a class="nav-link" href="#search">Recherche</a>
                     <a class="nav-link" href="#bookmarks">Marque-pages</a>
                     <a class="nav-link" href="#news">Catégories d'actualités</a>
+                    <a class="nav-link" href="#delete-account">Supprimer le profil</a>
                 </nav>
             </nav>
             <div class="d-flex flex-row gap-1 mx-4">
@@ -138,6 +139,16 @@ $newscategories = model('NewsCategoryModel')->select_all();
                         </div>
                     <?php endforeach; ?>
                 </div>
+
+                <div id="delete-account" class="mb-5">
+                    <h4>Supprimer le profil</h4>
+                    <p>Vous pouvez effacer les données vous concernant sur cette instance Majestic Start.</p>
+                    <p>Vos données de personnalisation seront supprimées et vous serez déconnecté.</p>
+                    <p>Cette action est irréversible. Ceci n'affectera pas votre compte MajestiCloud.</p>
+
+                    <a href="/logout.php?deleteaccount=1" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> Supprimer mon profil</a>
+                </div>
+
                 <div class="d-flex flex-row gap-1 d-md-none">
                     <a href="/" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Annuler</a>
                     <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Enregistrer</button>
