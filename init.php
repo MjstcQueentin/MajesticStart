@@ -32,8 +32,6 @@ set_exception_handler(function ($ex) {
     echo TemplateEngine::error($ex->__toString());
 });
 
-throw new Exception("Init file loaded");
-
 /**
  * Get a model instance
  * @template T
