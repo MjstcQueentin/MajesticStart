@@ -39,6 +39,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                     <a class="nav-link" href="#search">Recherche</a>
                     <a class="nav-link" href="#bookmarks">Marque-pages</a>
                     <a class="nav-link" href="#news">Catégories d'actualités</a>
+                    <a class="nav-link" href="#delete-account">Supprimer le profil</a>
                 </nav>
             </nav>
             <div class="d-flex flex-row gap-1 mx-4">
