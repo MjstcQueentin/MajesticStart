@@ -6,6 +6,12 @@ if (!SessionUtils::is_logged_in()) {
     return;
 }
 
+try {
+    $profile_picture = SessionUtils::profile_picture();
+} catch (Exception $e) {
+    $profile_picture = "";
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     model("UserModel")->update_one($_SESSION["user_uuid"], [
         "set_searchengine" => $_POST["set_searchengine"],
@@ -52,7 +58,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                     <h4>Compte</h4>
                     <div class="d-flex flex-row gap-3 align-items-center">
                         <div>
-                            <img src="<?= SessionUtils::profile_picture() ?>" alt="Photo de profil" height="75" width="75" class="rounded-circle">
+                            <img src="<?= $profile_picture ?>" alt="Photo de profil" height="75" width="75" class="rounded-circle">
                         </div>
                         <div>
                             <p class="m-0 fs-5"><?= $_SESSION["user"]["name"] ?></p>

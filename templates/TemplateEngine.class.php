@@ -42,6 +42,12 @@ class TemplateEngine
             $errors_dump = "";
         }
 
+        try {
+            $profilePicture = SessionUtils::profile_picture();
+        } catch (Exception $e) {
+            $profilePicture = '';
+        }
+
         $account_menu = "";
         if (defined("MAJESTICLOUD_ENABLE") && MAJESTICLOUD_ENABLE == false) {
             $account_menu = '<div></div>';
@@ -50,7 +56,7 @@ class TemplateEngine
                 ? self::template("header_session_on", [
                     "user_name" => $_SESSION["user"]["name"],
                     "user_email" => $_SESSION["user"]["primary_email"],
-                    "user_photo" => SessionUtils::profile_picture()
+                    "user_photo" => $profilePicture
                 ])
                 : self::template("header_session_off");
         }
