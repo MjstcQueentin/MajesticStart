@@ -23,12 +23,16 @@ require_once(__DIR__ . "/templates/TemplateEngine.class.php");
 set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) {
     global $errors;
     $errors[] = "$errstr in $errfile:$errline";
+    error_log("$errstr in $errfile:$errline");
 });
 
 set_exception_handler(function ($ex) {
+    error_log("{$ex->getMessage()} in {$ex->getFile()}:{$ex->getLine()}");
     http_response_code(500);
     echo TemplateEngine::error($ex->__toString());
 });
+
+throw new Exception("Init file loaded");
 
 /**
  * Get a model instance
