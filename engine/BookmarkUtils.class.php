@@ -29,7 +29,7 @@ class BookmarkUtils
         // Tenter de trouver une apple-touch-icon
         $spaner = $finder->query('//link[@rel="apple-touch-icon"]');
         if (($spaner !== false && $spaner->count() > 0)) {
-            for($i = 0; $i < $spaner->count(); $i++) {
+            for ($i = 0; $i < $spaner->count(); $i++) {
                 $found_icons[] = self::toAbsolutePath($spaner->item($i)->getAttribute('href'), $scheme, $domain);
             }
         }
@@ -41,7 +41,7 @@ class BookmarkUtils
             $manifest = json_decode(file_get_contents($manifest_link), true);
             if (!empty($manifest["icons"])) {
                 foreach ($manifest["icons"] as $icon) {
-                    if(empty($icon["purpose"]) || $icon["purpose"] == "any") {
+                    if (empty($icon["purpose"]) || $icon["purpose"] == "any") {
                         $found_icons[] = self::toAbsolutePath($icon["src"], $scheme, $domain);
                     }
                 }
@@ -51,7 +51,7 @@ class BookmarkUtils
         // Tenter de lire la favicon fournie
         $spaner = $finder->query('//link[contains(@rel,"icon")]');
         if (($spaner !== false && $spaner->count() > 0)) {
-            for($i = 0; $i < $spaner->count(); $i++) {
+            for ($i = 0; $i < $spaner->count(); $i++) {
                 $found_icons[] = self::toAbsolutePath($spaner->item($i)->getAttribute('href'), $scheme, $domain);
             }
         }
@@ -71,15 +71,23 @@ class BookmarkUtils
             }
         }
 
-        return $found_icons[$icon_index];
+        // Convertir l'icône en URL data:
+        $icon_data = file_get_contents($found_icons[$icon_index]);
+        if ($icon_data === false) {
+            return $found_icons[$icon_index];
+        } else {
+            $mime_type = mime_content_type($found_icons[$icon_index]);
+            return "data:" . $mime_type . ";base64," . base64_encode($icon_data);
+        }
     }
 
-    public static function toAbsolutePath($href, $scheme, $hostname, $path = "/") {
+    public static function toAbsolutePath($href, $scheme, $hostname, $path = "/")
+    {
         $absolutePath = "";
-        if(strpos($href, '://') === false) {
+        if (strpos($href, '://') === false) {
             $absolutePath .= "$scheme://$hostname";
 
-            if(substr($href, 0, 1) != "/") {
+            if (substr($href, 0, 1) != "/") {
                 $absolutePath .= $path;
             }
 
