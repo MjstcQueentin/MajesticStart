@@ -9,7 +9,7 @@ final class BookmarkModel extends DatabaseQuerier
 
     public function delete_all_of_user($user_uuid)
     {
-        $sql = "DELETE FROM `bookmark` WHERE majesticloud_user_id = ?";
+        $sql = "DELETE FROM `bookmark` WHERE user_id = ?";
 
         return $this->db->write_query($sql, [
             $user_uuid
