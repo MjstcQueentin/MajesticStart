@@ -125,6 +125,10 @@ $newscategories = model('NewsCategoryModel')->select_all();
                 <div id="news" class="mb-5">
                     <h4>Catégories d'actualités</h4>
                     <p>Choisissez quelles catégories d'actualités afficher sur votre portail.</p>
+                    <div>
+                        <button type="button" data-trigger="check-all-news-categories" class="btn btn-sm btn-outline-primary mb-2">Tout sélectionner</button>
+                        <button type="button" data-trigger="uncheck-all-news-categories" class="btn btn-sm btn-outline-secondary mb-2">Tout désélectionner</button>
+                    </div>
                     <?php foreach ($newscategories as $category) : ?>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="set_newscategories[]" id="<?= $category['uuid'] ?>-newscategory-check" value="<?= $category['uuid'] ?>" <?php if (in_array($category['uuid'], $user['set_newscategories'])) echo 'checked' ?>>
@@ -141,6 +145,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
             </div>
             <?= TemplateEngine::footer() ?>
             <script src="/assets/scripts/settings-bookmarks.js"></script>
+            <script src="/assets/scripts/settings-news.js"></script>
         </div>
     </form>
 </body>
