@@ -10,7 +10,7 @@ global $errors;
 $errors = [];
 
 // Defines Majestic Start's version number
-defined('MAJESTIC_START_VERSION') || define('MAJESTIC_START_VERSION', '4.4.0.1');
+defined('MAJESTIC_START_VERSION') || define('MAJESTIC_START_VERSION', '4.5.0.0');
 
 require_once(__DIR__ . "/config/config.php");
 require_once(__DIR__ . "/database/DatabaseQuerier.class.php");
