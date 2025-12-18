@@ -40,7 +40,7 @@ class NewsAggregator
             } else {
                 throw new RuntimeException(curl_error($ch));
             }
-        } else {
+        } elseif(!empty($xml)) {
             // Cache the RSS feed
             file_put_contents($cache_link, $xml);
         }
