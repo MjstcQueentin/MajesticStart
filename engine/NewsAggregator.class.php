@@ -40,7 +40,7 @@ class NewsAggregator
             } else {
                 throw new RuntimeException(curl_error($ch));
             }
-        } elseif(!empty($xml)) {
+        } elseif (!empty($xml)) {
             // Cache the RSS feed
             file_put_contents($cache_link, $xml);
         }
@@ -65,6 +65,7 @@ class NewsAggregator
      */
     public static function transform($channel_items, $newsfeed_uuid, $max_items = 12)
     {
+        libxml_use_internal_errors(true);
         $transformed = [];
 
         foreach ($channel_items as $item) {
@@ -84,15 +85,19 @@ class NewsAggregator
                 // Chercher sur la page de destination
                 $ch = curl_init($item->link);
                 curl_setopt_array($ch, [
-                    CURLOPT_USERAGENT => "MajesticStart/" . MAJESTIC_START_VERSION,
                     CURLOPT_FAILONERROR => true,
                     CURLOPT_RETURNTRANSFER => true
                 ]);
                 $html = curl_exec($ch);
 
-                if (!empty($html) && $html !== false) {
+                if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 403) {
+                    // On 403 errors, try again with the user agent
+                    curl_setopt($ch, CURLOPT_USERAGENT, sprintf("curl/%s (MajesticStart/%s; +%s) Bot", curl_version()['version'], MAJESTIC_START_VERSION, ENVIRONMENT_ROOT));
+                    $html = curl_exec($ch);
+                }
+
+                if (curl_errno($ch) == 0 && !empty($html) && $html !== false) {
                     $page = new DOMDocument();
-                    libxml_use_internal_errors(true);
                     $page->loadHTML($html);
                     $finder = new DOMXPath($page);
 
@@ -116,6 +121,8 @@ class NewsAggregator
                         }
                     }
                 }
+
+                curl_close($ch);
             }
 
             $transformed[] = [
@@ -132,6 +139,7 @@ class NewsAggregator
         }
 
         libxml_clear_errors();
+        libxml_use_internal_errors(false);
         return $transformed;
     }
 }
