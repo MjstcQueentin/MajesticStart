@@ -20,7 +20,7 @@ require_once(__DIR__ . "/engine/NewsAggregator.class.php");
 require_once(__DIR__ . "/engine/OpenWeatherMap.class.php");
 require_once(__DIR__ . "/templates/TemplateEngine.class.php");
 
-set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) {
+set_error_handler(function (int $errno, string $errstr, ?string $errfile, ?int $errline) {
     global $errors;
     $errors[] = "$errstr in $errfile:$errline";
     error_log("$errstr in $errfile:$errline");
