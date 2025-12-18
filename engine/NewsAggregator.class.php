@@ -92,6 +92,7 @@ class NewsAggregator
 
                 if (!empty($html) && $html !== false) {
                     $page = new DOMDocument();
+                    libxml_use_internal_errors(true);
                     $page->loadHTML($html);
                     $finder = new DOMXPath($page);
 
@@ -130,6 +131,7 @@ class NewsAggregator
             if (count($transformed) >= $max_items) break;
         }
 
+        libxml_clear_errors();
         return $transformed;
     }
 }
