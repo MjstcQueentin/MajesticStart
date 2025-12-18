@@ -5,7 +5,5 @@ config/config.php
 .vscode
 
 # Generated files
-engine/raw-xml-cache/*.xml
-engine/aggregator-cache/*.json
-engine/aggregator-cache/*.sd
-logs/*.log
+/writable/*/*
+!/writable/*/.gitkeep

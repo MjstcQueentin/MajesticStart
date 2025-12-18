@@ -6,7 +6,7 @@
  * @license MIT License
  */
 
-$log_path = __DIR__ . "/logs/cron-task-" . date("Y-m-d") . ".log";
+$log_path = __DIR__ . "/writable/logs/cron-task-" . date("Y-m-d") . ".log";
 $log = fopen($log_path, "a");
 
 include(__DIR__ . "/init.php");

@@ -7,6 +7,8 @@
  */
 class NewsAggregator
 {
+    private static $writableDir = __DIR__ . "/../writable/";
+
     /**
      * Charge un flux RSS, le met en cache et retourne son contenu en SimpleXMLElement.
      * @param string $newsfeed_uuid UUID du flux
@@ -16,8 +18,8 @@ class NewsAggregator
      */
     public static function load_rss($newsfeed_uuid, $rss_link)
     {
-        $cache_link = __DIR__ . "/raw-xml-cache/" . $newsfeed_uuid . ".xml";
-        // Write a new cache file if it was modified more than 15 minutes ago (or if it doesn't exist)
+        $cache_link = self::$writableDir . "rsscache/" . $newsfeed_uuid . ".xml";
+
         $ch = curl_init($rss_link);
         curl_setopt_array($ch, [
             CURLOPT_FAILONERROR => true,
@@ -38,10 +40,12 @@ class NewsAggregator
             } else {
                 throw new RuntimeException(curl_error($ch));
             }
+        } else {
+            // Cache the RSS feed
+            file_put_contents($cache_link, $xml);
         }
-        curl_close($ch);
 
-        file_put_contents($cache_link, $xml);
+        curl_close($ch);
 
         $xmlObject = new SimpleXMLElement($xml, LIBXML_NOCDATA);
         $namespaces = $xmlObject->getNameSpaces(true);
@@ -127,59 +131,5 @@ class NewsAggregator
         }
 
         return $transformed;
-    }
-
-    /**
-     * Fonction d'aggrégation finale, trie les éléments dans l'ordre antichronologique.
-     * Met l'aggrégation en cache.
-     * @param string $category_uuid UUID de la catégorie
-     * @param array $transformed_items Tableau d'éléments transformés
-     * @return array
-     * @deprecated On privilégiera l'usage de la table 'newspost' pour la mise en cache des articles
-     */
-    public static function aggregate($category_uuid, &$transformed_items)
-    {
-        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.sd";
-        usort($transformed_items, function ($a, $b) {
-            if (intval($a["pubDate"]) > intval($b["pubDate"])) return -1;
-            elseif (intval($a["pubDate"]) < intval($b["pubDate"])) return 1;
-            else return 0;
-        });
-
-        file_put_contents($cache_link, serialize($transformed_items));
-
-        return $transformed_items;
-    }
-
-    /**
-     * Vérifie si la catégorie est mise en cache depuis moins de 15 minutes.
-     * @param string $category_uuid UUID de la catégorie
-     * @return bool TRUE si la catégorie a été mise en cache depuis moins de 15 minutes, FALSE sinon.
-     * @deprecated On privilégiera l'usage de la table 'newspost' pour la mise en cache des articles
-     */
-    public static function is_cached($category_uuid)
-    {
-        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.sd";
-        if (!is_file($cache_link) || filemtime($cache_link) < (time() - (15 * 60))) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Retourne les éléments transformés dernièrement mis en cache d'une catégorie.
-     * Si la catégorie n'a pas de cache, la fonction retourne un tableau vide.
-     * @param string $category_uuid UUID de la catégorie
-     * @return array
-     * @deprecated On privilégiera l'usage de la table 'newspost' pour la mise en cache des articles
-     */
-    public static function get_cache($category_uuid)
-    {
-        $cache_link = __DIR__ . "/aggregator-cache/$category_uuid.sd";
-        if (is_file($cache_link)) {
-            return unserialize(file_get_contents($cache_link)) ?? [];
-        }
-
-        return [];
     }
 }
