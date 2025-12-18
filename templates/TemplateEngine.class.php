@@ -27,7 +27,7 @@ class TemplateEngine
         ]);
     }
 
-    public static function header($title = null)
+    public static function header(?string $title)
     {
         if (!isset($title)) $title = datefmt_format(datefmt_create("fr-FR", IntlDateFormatter::FULL, IntlDateFormatter::NONE), new DateTime()); // date('l d F o');
 

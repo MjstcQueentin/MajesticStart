@@ -18,7 +18,7 @@ final class NewsPostModel extends DatabaseQuerier
     /**
      * Sélectionne les posts provenant des fluxs d'une catégorie
      */
-    public function select_of_category(string $newscategory_uuid, int $limit = null)
+    public function select_of_category(string $newscategory_uuid, ?int $limit)
     {
         $sql = "SELECT `newspost`.*, `newssource`.`name` as `newssource_name`, `newssource`.`logo_dark` AS `newssource_logo_dark`, `newssource`.`logo_light` AS `newssource_logo_light`
         FROM `newspost` 

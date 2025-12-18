@@ -10,12 +10,12 @@ $log_path = __DIR__ . "/writable/logs/cron-task-" . date("Y-m-d") . ".log";
 $log = fopen($log_path, "a");
 
 include(__DIR__ . "/init.php");
-set_error_handler(function (int $errno, string $errstr, string $errfile = null, int $errline = null, array $errcontext = null) use (&$log) {
-    echo "$errstr ($errfile:$errline)" . PHP_EOL;
+set_error_handler(function (int $errno, string $errstr, ?string $errfile, ?int $errline) use (&$log) {
+    error_log(sprintf("%s in %s:%d", $errstr, $errfile, $errline));
     if ($log) fwrite($log, date('Y-m-d H:i:s') . " $errstr ($errfile:$errline)" . PHP_EOL);
 });
 set_exception_handler(function ($ex) use (&$log) {
-    echo $ex->__toString() . PHP_EOL;
+    error_log(sprintf("%s in %s:%d", $ex->getMessage(), $ex->getFile(), $ex->getLine()));
     if ($log) fwrite($log, date('Y-m-d H:i:s') . " " . str_replace(PHP_EOL, " ", $ex->getMessage()) . PHP_EOL);
 });
 
