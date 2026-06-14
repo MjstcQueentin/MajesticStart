@@ -16,7 +16,7 @@ final class DatabaseConnection
     /**
      * Get the shared instance of DatabaseConnection.
      */
-    public static function instance()
+    public static function instance(): DatabaseConnection
     {
         if (!isset(self::$instance)) {
             self::$instance = new DatabaseConnection();
@@ -31,7 +31,8 @@ final class DatabaseConnection
      */
     function __construct()
     {
-        $this->pdo = new PDO("mysql:host=" . DATABASE['host'] . ";dbname=" . DATABASE['dbname'], DATABASE["user"], DATABASE["pwd"], [
+        $database = config("databaseCredentials");
+        $this->pdo = new PDO("mysql:host=" . $database['host'] . ";dbname=" . $database['dbname'], $database["user"], $database["pwd"], [
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
         ]);
     }
@@ -44,7 +45,7 @@ final class DatabaseConnection
      * @param int $fetchParam Mode de récupération des résultats, ou index de la colonne pour fetchColumn
      * @return array
      */
-    public function select_query(string $sql, array $params = [], string $fetchFunction = "fetchAll", int $fetchParam = PDO::FETCH_ASSOC)
+    public function select_query(string $sql, array $params = [], string $fetchFunction = "fetchAll", int $fetchParam = PDO::FETCH_ASSOC): array
     {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
@@ -60,7 +61,7 @@ final class DatabaseConnection
      * @param array $params Paramètres, rangés dans l'ordre d'apparition des "?", ou avec des clés correspondant aux placeholders de la requête.
      * @return bool
      */
-    public function write_query(string $sql, array $params = [])
+    public function write_query(string $sql, array $params = []): bool
     {
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute($params);
@@ -72,22 +73,22 @@ final class DatabaseConnection
     /**
      * Returns the ID of the last inserted row
      */
-    public function insert_id()
+    public function insert_id(): string|false
     {
         return $this->pdo->lastInsertId();
     }
 
-    public function start_transaction()
+    public function start_transaction(): bool
     {
         return $this->pdo->beginTransaction();
     }
 
-    public function commit()
+    public function commit(): bool
     {
         return $this->pdo->commit();
     }
 
-    public function rollback()
+    public function rollback(): bool
     {
         return $this->pdo->rollBack();
     }

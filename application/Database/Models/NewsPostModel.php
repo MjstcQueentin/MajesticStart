@@ -13,7 +13,7 @@ final class NewsPostModel extends DatabaseQuerier
     /**
      * Retire de la table tous les posts
      */
-    public function delete_all()
+    public function delete_all(): bool
     {
         return $this->db->write_query("DELETE FROM `newspost`;");
     }
@@ -21,7 +21,7 @@ final class NewsPostModel extends DatabaseQuerier
     /**
      * Sélectionne les posts provenant des fluxs d'une catégorie
      */
-    public function select_of_category(string $newscategory_uuid, ?int $limit)
+    public function select_of_category(string $newscategory_uuid, ?int $limit): array
     {
         $sql = "SELECT `newspost`.*, `newssource`.`name` as `newssource_name`, `newssource`.`logo_dark` AS `newssource_logo_dark`, `newssource`.`logo_light` AS `newssource_logo_light`
         FROM `newspost`

@@ -10,7 +10,12 @@ final class PlannedEventModel extends DatabaseQuerier
     protected string $primaryKey = "id";
     protected ?string $primaryKeyType = "autoincrement";
 
-    public function select_today()
+    /**
+     * Selects all events that are planned for today
+     *
+     * @return array
+     */
+    public function select_today(): array
     {
         $sql = "SELECT * FROM `planned_event` WHERE ? BETWEEN from_date AND until_date";
 

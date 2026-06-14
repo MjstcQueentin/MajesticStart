@@ -47,7 +47,7 @@ abstract class DatabaseQuerier
         $this->db = DatabaseConnection::instance();
     }
 
-    public function select_one(string|int $id)
+    public function select_one(string|int $id): array|null
     {
         $sql = "SELECT * FROM :tableName WHERE :primaryKey = ?";
         $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
@@ -62,7 +62,12 @@ abstract class DatabaseQuerier
         }
     }
 
-    public function select(array $where, array $orderBy = [])
+    /**
+     * @param array $where
+     * @param array $orderBy
+     * @return array
+     */
+    public function select(array $where, array $orderBy = []): array
     {
         if (empty($where)) {
             return $this->select_all();
@@ -85,7 +90,11 @@ abstract class DatabaseQuerier
         }
     }
 
-    public function select_all(array $orderBy = [])
+    /**
+     * @param array $orderBy
+     * @return array
+     */
+    public function select_all(array $orderBy = []): array
     {
         $sql = "SELECT * FROM :tableName";
 
@@ -96,7 +105,12 @@ abstract class DatabaseQuerier
         return $this->db->select_query($sql);
     }
 
-    public function insert_one(array $data, bool $return_id = false)
+    /**
+     * @param array $data
+     * @param bool $return_id
+     * @return int|string|bool
+     */
+    public function insert_one(array $data, bool $return_id = false): int|string|bool
     {
         if ($this->primaryKeyType == "uniqid") {
             $uniqid = uniqid();
@@ -131,12 +145,17 @@ abstract class DatabaseQuerier
         return $return_id ? $this->insertId : $success;
     }
 
-    public function insert_id()
+    public function insert_id(): string
     {
         return $this->insertId;
     }
 
-    public function insert(array $dataset)
+    /**
+     * @param array $dataset
+     * @return int
+     * @throws Exception
+     */
+    public function insert(array $dataset): int
     {
         $insert_count = 0;
 
@@ -149,7 +168,13 @@ abstract class DatabaseQuerier
         return $insert_count;
     }
 
-    public function update_one(string|int $id, array $data)
+    /**
+     * @param string|int $id
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    public function update_one(string|int $id, array $data): bool
     {
         $sql = "UPDATE :tableName SET :data WHERE :primaryKey = ?";
         $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
@@ -170,7 +195,12 @@ abstract class DatabaseQuerier
         return $this->db->write_query($sql, array_merge(array_values($data), [$id]));
     }
 
-    public function delete_one(string|int $id)
+    /**
+     * @param string|int $id
+     * @return bool
+     * @throws Exception
+     */
+    public function delete_one(string|int $id): bool
     {
         $sql = "DELETE FROM :tableName WHERE :primaryKey = ?";
         $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
@@ -180,7 +210,12 @@ abstract class DatabaseQuerier
         return $this->db->write_query($sql, [$id]);
     }
 
-    public function delete(array $where)
+    /**
+     * @param array $where
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $where): bool
     {
         if (empty($where)) {
             throw new Exception("Deleting without conditions is forbidden.");

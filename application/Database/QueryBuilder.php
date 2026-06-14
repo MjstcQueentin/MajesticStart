@@ -2,55 +2,82 @@
 
 namespace MajesticStart\Database;
 
+/**
+ * @internal
+ */
 final class QueryBuilder
 {
-    public static function escape_identifier($identifier)
+    /**
+     * @param string $identifier
+     * @return string
+     */
+    public static function escape_identifier(string $identifier): string
     {
         $identifier = str_ireplace("`", "", $identifier);
         return "`$identifier`";
     }
 
-    public static function escape_keyword($keyword)
+    /**
+     * @param string $keyword
+     * @return string
+     */
+    public static function escape_keyword(string $keyword): string
     {
-        return str_replace(
-            ["'", '"', '`', ";"],
-            ["", "", "", ""],
-            $keyword
-        );
+        return str_replace(["'", '"', "`", ";"], ["", "", "", ""], $keyword);
     }
 
-    public static function makeWhere(array $where)
+    /**
+     * @param array $where
+     * @return array
+     */
+    public static function makeWhere(array $where): array
     {
         $conditions = [];
         $params = [];
         foreach ($where as $key => $value) {
             if (!isset($value)) {
                 $conditions[$key] = " IS NULL";
-            } else if (is_array($value)) {
+            } elseif (is_array($value)) {
                 $conditions[$key] = " IN(" . str_pad("?", count($value) * 2 - 1, ",?") . ")";
                 $params = array_merge($params, $value);
             } else {
-                $conditions[$key] =  " = ?";
+                $conditions[$key] = " = ?";
                 array_push($params, $value);
             }
         }
 
-        $where = " WHERE " . implode(" AND ", array_map(function ($key) use ($conditions) {
-            return QueryBuilder::escape_identifier($key) . $conditions[$key];
-        }, array_keys($where)));
+        $where =
+            " WHERE " .
+            implode(
+                " AND ",
+                array_map(function ($key) use ($conditions) {
+                    return QueryBuilder::escape_identifier($key) . $conditions[$key];
+                }, array_keys($where)),
+            );
 
         return [
             "where" => $where,
-            "params" => $params
+            "params" => $params,
         ];
     }
 
-    public static function makeOrderBy(array $orderBy)
+    /**
+     * Make order by clause
+     * @param array $orderBy Associative array of column name and direction
+     * @return string
+     */
+    public static function makeOrderBy(array $orderBy): string
     {
-        if (empty($orderBy)) return "";
+        if (empty($orderBy)) {
+            return "";
+        }
 
-        return " ORDER BY " . implode(", ", array_map(function ($key) use ($orderBy) {
-            return self::escape_identifier($key) . " " . self::escape_keyword($orderBy[$key]);
-        }, array_keys($orderBy)));
+        return " ORDER BY " .
+            implode(
+                ", ",
+                array_map(function ($key) use ($orderBy) {
+                    return self::escape_identifier($key) . " " . self::escape_keyword($orderBy[$key]);
+                }, array_keys($orderBy)),
+            );
     }
 }

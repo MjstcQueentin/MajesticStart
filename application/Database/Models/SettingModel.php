@@ -12,7 +12,11 @@ final class SettingModel extends DatabaseQuerier
     protected string $primaryKey = "name";
     protected ?string $primaryKeyType = null;
 
-    public function select_all($orderBy = [])
+    /**
+     * @param array<string, string> $orderBy
+     * @return array<string, string>
+     */
+    public function select_all($orderBy = []): array
     {
         return $this->db->select_query(
             "SELECT * FROM `setting`" . QueryBuilder::makeOrderBy($orderBy),

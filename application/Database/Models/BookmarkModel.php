@@ -10,6 +10,12 @@ final class BookmarkModel extends DatabaseQuerier
     protected string $primaryKey = "uuid";
     protected ?string $primaryKeyType = "uniqid";
 
+    /**
+     * Delete all bookmarks of a user
+     *
+     * @param string $user_uuid
+     * @return bool
+     */
     public function delete_all_of_user($user_uuid)
     {
         $sql = "DELETE FROM `bookmark` WHERE user_id = ?";

@@ -10,6 +10,12 @@ final class NewsFeedModel extends DatabaseQuerier
     protected string $primaryKey = "uuid";
     protected ?string $primaryKeyType = "uniqid";
 
+    /**
+     * Select all newsfeeds in a category
+     *
+     * @param string $newscategory_uuid
+     * @return array
+     */
     public function select_in_category(string $newscategory_uuid)
     {
         return $this->db->select_query(

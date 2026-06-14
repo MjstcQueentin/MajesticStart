@@ -10,7 +10,7 @@ final class UserModel extends DatabaseQuerier
     protected string $primaryKey = "majesticloud_user_id";
     protected ?string $primaryKeyType = null;
 
-    public function insert_one(array $data, bool $return_id = false)
+    public function insert_one(array $data, bool $return_id = false): bool
     {
         // Par défaut, les catégories d'actualités sont toutes sélectionnées
         $categories = $this->db->select_query("SELECT `uuid` FROM `newscategory`");
