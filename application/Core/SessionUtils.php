@@ -1,5 +1,12 @@
 <?php
 
+namespace MajesticStart\Core;
+
+use RuntimeException;
+
+/**
+ * Session data management
+ */
 class SessionUtils
 {
     public static function is_logged_in()

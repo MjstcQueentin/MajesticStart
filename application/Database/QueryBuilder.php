@@ -1,5 +1,7 @@
 <?php
 
+namespace MajesticStart\Database;
+
 final class QueryBuilder
 {
     public static function escape_identifier($identifier)

@@ -1,5 +1,9 @@
 <?php
 
+namespace MajesticStart\Libraries;
+
+use RuntimeException;
+
 /**
  * @link https://openweathermap.org/api
  * @version 2.5

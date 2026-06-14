@@ -1,6 +1,8 @@
 <?php
-require_once(__DIR__ . "/DatabaseConnection.class.php");
-require_once(__DIR__ . "/QueryBuilder.class.php");
+
+namespace MajesticStart\Database;
+
+use Exception;
 
 /**
  * This class allows one to make queries into one table of Majestic Start's database.
@@ -22,6 +24,24 @@ abstract class DatabaseQuerier
 
     private int|string $insertId;
 
+    /**
+     * Returns a new instance of a model
+     * @template T
+     * @param class-string<T> $name Name of the model
+     * @return T
+     * @throws Exception If the model does not exist
+     */
+    public static function model(string $name): DatabaseQuerier
+    {
+        $modelClassPath = __DIR__ . "/Models/{$name}.php";
+        if (!is_file($modelClassPath)) {
+            throw new Exception("Model {$name} not found");
+        }
+        require_once $modelClassPath;
+        $modelClassName = "MajesticStart\\Database\\Models\\{$name}";
+        return new $modelClassName();
+    }
+
     function __construct()
     {
         $this->db = DatabaseConnection::instance();
@@ -30,33 +50,26 @@ abstract class DatabaseQuerier
     public function select_one(string|int $id)
     {
         $sql = "SELECT * FROM :tableName WHERE :primaryKey = ?";
-        $sql = str_replace(
-            ":tableName",
-            QueryBuilder::escape_identifier($this->tableName),
-            $sql
-        );
+        $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
 
-        $sql = str_replace(
-            ":primaryKey",
-            QueryBuilder::escape_identifier($this->primaryKey),
-            $sql
-        );
+        $sql = str_replace(":primaryKey", QueryBuilder::escape_identifier($this->primaryKey), $sql);
 
         $resultSet = $this->db->select_query($sql, [$id], "fetch");
-        if (empty($resultSet)) return null;
-        else return $resultSet;
+        if (empty($resultSet)) {
+            return null;
+        } else {
+            return $resultSet;
+        }
     }
 
     public function select(array $where, array $orderBy = [])
     {
-        if (empty($where)) return $this->select_all();
+        if (empty($where)) {
+            return $this->select_all();
+        }
 
         $sql = "SELECT * FROM :tableName";
-        $sql = str_replace(
-            ":tableName",
-            QueryBuilder::escape_identifier($this->tableName),
-            $sql
-        );
+        $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
 
         $where = QueryBuilder::makeWhere($where);
         $params = $where["params"];
@@ -65,19 +78,18 @@ abstract class DatabaseQuerier
         $sql .= QueryBuilder::makeOrderBy($orderBy);
 
         $resultSet = $this->db->select_query($sql, $params);
-        if (empty($resultSet)) return [];
-        else return $resultSet;
+        if (empty($resultSet)) {
+            return [];
+        } else {
+            return $resultSet;
+        }
     }
 
     public function select_all(array $orderBy = [])
     {
         $sql = "SELECT * FROM :tableName";
 
-        $sql = str_replace(
-            ":tableName",
-            QueryBuilder::escape_identifier($this->tableName),
-            $sql
-        );
+        $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
 
         $sql .= QueryBuilder::makeOrderBy($orderBy);
 
@@ -92,13 +104,25 @@ abstract class DatabaseQuerier
         }
 
         $sql = "INSERT INTO " . QueryBuilder::escape_identifier($this->tableName);
-        $sql .= "(" . implode(",", array_map(function ($key) {
-            return QueryBuilder::escape_identifier($key);
-        }, array_keys($data))) . ")";
+        $sql .=
+            "(" .
+            implode(
+                ",",
+                array_map(function ($key) {
+                    return QueryBuilder::escape_identifier($key);
+                }, array_keys($data)),
+            ) .
+            ")";
 
-        $sql .= "VALUES(" . implode(",", array_map(function ($key) {
-            return "?";
-        }, array_values($data))) . ")";
+        $sql .=
+            "VALUES(" .
+            implode(
+                ",",
+                array_map(function ($key) {
+                    return "?";
+                }, array_values($data)),
+            ) .
+            ")";
 
         $success = $this->db->write_query($sql, array_values($data));
         if ($success) {
@@ -128,25 +152,20 @@ abstract class DatabaseQuerier
     public function update_one(string|int $id, array $data)
     {
         $sql = "UPDATE :tableName SET :data WHERE :primaryKey = ?";
-        $sql = str_replace(
-            ":tableName",
-            QueryBuilder::escape_identifier($this->tableName),
-            $sql
-        );
+        $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
 
         $sql = str_replace(
             ":data",
-            implode(", ", array_map(function ($key) {
-                return QueryBuilder::escape_identifier($key) . " = ?";
-            }, array_keys($data))),
-            $sql
+            implode(
+                ", ",
+                array_map(function ($key) {
+                    return QueryBuilder::escape_identifier($key) . " = ?";
+                }, array_keys($data)),
+            ),
+            $sql,
         );
 
-        $sql = str_replace(
-            ":primaryKey",
-            QueryBuilder::escape_identifier($this->primaryKey),
-            $sql
-        );
+        $sql = str_replace(":primaryKey", QueryBuilder::escape_identifier($this->primaryKey), $sql);
 
         return $this->db->write_query($sql, array_merge(array_values($data), [$id]));
     }
@@ -154,32 +173,22 @@ abstract class DatabaseQuerier
     public function delete_one(string|int $id)
     {
         $sql = "DELETE FROM :tableName WHERE :primaryKey = ?";
-        $sql = str_replace(
-            ":tableName",
-            QueryBuilder::escape_identifier($this->tableName),
-            $sql
-        );
+        $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
 
-        $sql = str_replace(
-            ":primaryKey",
-            QueryBuilder::escape_identifier($this->primaryKey),
-            $sql
-        );
+        $sql = str_replace(":primaryKey", QueryBuilder::escape_identifier($this->primaryKey), $sql);
 
         return $this->db->write_query($sql, [$id]);
     }
 
     public function delete(array $where)
     {
-        if (empty($where)) throw new Exception("Deleting without conditions is forbidden.");
+        if (empty($where)) {
+            throw new Exception("Deleting without conditions is forbidden.");
+        }
 
         $sql = "DELETE FROM :tableName";
 
-        $sql = str_replace(
-            ":tableName",
-            QueryBuilder::escape_identifier($this->tableName),
-            $sql
-        );
+        $sql = str_replace(":tableName", QueryBuilder::escape_identifier($this->tableName), $sql);
 
         $where = QueryBuilder::makeWhere($where);
         $params = $where["params"];

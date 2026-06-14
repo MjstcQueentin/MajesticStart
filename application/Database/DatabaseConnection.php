@@ -1,5 +1,9 @@
 <?php
 
+namespace MajesticStart\Database;
+
+use PDO;
+
 /**
  * This class allows one to connect to Majestic Start's database.
  * @author Quentin Pugeat <contact@quentinpugeat.fr>

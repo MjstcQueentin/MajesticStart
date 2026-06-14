@@ -1,5 +1,12 @@
 <?php
 
+namespace MajesticStart\View;
+
+use DateTime;
+use Exception;
+use IntlDateFormatter;
+use MajesticStart\Core\SessionUtils;
+
 /**
  * Impression des templates
  */

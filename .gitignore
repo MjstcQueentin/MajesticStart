@@ -1,8 +1,9 @@
 # Configuration file
-config/config.php
+.env
 
-# VS Code artefacts
+# IDE artefacts
 .vscode
+.zed
 
 # Generated files
 /writable/*/*

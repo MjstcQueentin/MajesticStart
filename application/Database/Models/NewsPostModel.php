@@ -1,5 +1,8 @@
 <?php
-require_once(__DIR__ . "/../DatabaseQuerier.class.php");
+
+namespace MajesticStart\Database\Models;
+
+use MajesticStart\Database\DatabaseQuerier;
 
 final class NewsPostModel extends DatabaseQuerier
 {
@@ -21,7 +24,7 @@ final class NewsPostModel extends DatabaseQuerier
     public function select_of_category(string $newscategory_uuid, ?int $limit)
     {
         $sql = "SELECT `newspost`.*, `newssource`.`name` as `newssource_name`, `newssource`.`logo_dark` AS `newssource_logo_dark`, `newssource`.`logo_light` AS `newssource_logo_light`
-        FROM `newspost` 
+        FROM `newspost`
         INNER JOIN `newsfeed` ON `newspost`.`newsfeed_uuid` = `newsfeed`.`uuid`
         INNER JOIN `newssource` ON `newsfeed`.`newssource_id` = `newssource`.`id`
         WHERE `newspost`.`newsfeed_uuid` IN(SELECT `newsfeed_uuid` FROM `newscategory_has_newsfeed` WHERE `newscategory_uuid` = ?)

@@ -1,6 +1,10 @@
 <?php
-require_once(__DIR__ . "/../DatabaseQuerier.class.php");
-require_once(__DIR__ . "/../QueryBuilder.class.php");
+
+namespace MajesticStart\Database\Models;
+
+use MajesticStart\Database\DatabaseQuerier;
+use MajesticStart\Database\QueryBuilder;
+use PDO;
 
 final class SettingModel extends DatabaseQuerier
 {

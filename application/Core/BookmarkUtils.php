@@ -1,12 +1,23 @@
 <?php
 
+namespace MajesticStart\Core;
+
+use DOMDocument;
+use DOMXPath;
+
 /**
  * Fonctions utiles pour la gestion des marque-pages.
  * @author Quentin Pugeat <contact@quentinpugeat.fr>
  */
 class BookmarkUtils
 {
-    public static function iconFrom($url)
+    /**
+     * Get the favicon from a website.
+     *
+     * @param string $url URL to the website
+     * @return string
+     */
+    public static function iconFrom($url): string
     {
         $scheme = parse_url($url, PHP_URL_SCHEME);
         $domain = parse_url($url, PHP_URL_HOST);
@@ -81,6 +92,15 @@ class BookmarkUtils
         }
     }
 
+    /**
+     * Turns a path into an absolute path.
+     *
+     * @param string $href
+     * @param string $scheme
+     * @param string $hostname
+     * @param string $path
+     * @return string
+     */
     public static function toAbsolutePath($href, $scheme, $hostname, $path = "/")
     {
         $absolutePath = "";

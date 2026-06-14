@@ -1,5 +1,12 @@
 <?php
 
+namespace MajesticStart\Core;
+
+use DOMDocument;
+use DOMXPath;
+use RuntimeException;
+use SimpleXMLElement;
+
 /**
  * Agrégateur de nouvelles.
  * Fonctions utiles pour le chargement de flux RSS et l'agrégation de nouvelles depuis une ou plusieurs sources.
@@ -48,7 +55,7 @@ class NewsAggregator
         curl_close($ch);
 
         $xmlObject = new SimpleXMLElement($xml, LIBXML_NOCDATA);
-        $namespaces = $xmlObject->getNameSpaces(true);
+        $namespaces = $xmlObject->getNamespaces(true);
         foreach ($namespaces as $namespace => $nsSource) {
             $xmlObject->registerXPathNamespace($namespace, $nsSource);
         }
@@ -60,7 +67,7 @@ class NewsAggregator
      * Transforme des items d'un flux RSS en arrays standardisés.
      * @param SimpleXMLElement|SimpleXMLElement[] $channel_items Tableau d'éléments <item>
      * @param array $newsfeed_uuid UUID du flux fournissant les items
-     * @param int $max_items 
+     * @param int $max_items
      * @return array
      */
     public static function transform($channel_items, $newsfeed_uuid, $max_items = 12)

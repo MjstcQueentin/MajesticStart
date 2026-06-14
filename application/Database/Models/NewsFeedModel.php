@@ -1,5 +1,8 @@
 <?php
-require_once(__DIR__ . "/../DatabaseQuerier.class.php");
+
+namespace MajesticStart\Database\Models;
+
+use MajesticStart\Database\DatabaseQuerier;
 
 final class NewsFeedModel extends DatabaseQuerier
 {
@@ -10,9 +13,9 @@ final class NewsFeedModel extends DatabaseQuerier
     public function select_in_category(string $newscategory_uuid)
     {
         return $this->db->select_query(
-            "SELECT `newsfeed`.* 
-            FROM `newsfeed` 
-            INNER JOIN `newscategory_has_newsfeed` ON `newscategory_has_newsfeed`.`newsfeed_uuid` = `newsfeed`.`uuid` 
+            "SELECT `newsfeed`.*
+            FROM `newsfeed`
+            INNER JOIN `newscategory_has_newsfeed` ON `newscategory_has_newsfeed`.`newsfeed_uuid` = `newsfeed`.`uuid`
             WHERE `newscategory_uuid` = ?",
             [$newscategory_uuid]
         );
