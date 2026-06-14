@@ -14,8 +14,6 @@ use SimpleXMLElement;
  */
 class NewsAggregator
 {
-    private static $writableDir = __DIR__ . "/../writable/";
-
     /**
      * Charge un flux RSS, le met en cache et retourne son contenu en SimpleXMLElement.
      * @param string $newsfeed_uuid UUID du flux
@@ -25,7 +23,7 @@ class NewsAggregator
      */
     public static function load_rss($newsfeed_uuid, $rss_link)
     {
-        $cache_link = self::$writableDir . "rsscache/" . $newsfeed_uuid . ".xml";
+        $cache_link = WRITEPATH . "rsscache/{$newsfeed_uuid}.xml";
 
         $ch = curl_init($rss_link);
         curl_setopt_array($ch, [
@@ -36,7 +34,7 @@ class NewsAggregator
 
         // If the server responds with a 403 error, try again with the user agent
         if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 403) {
-            curl_setopt($ch, CURLOPT_USERAGENT, sprintf("curl/%s (MajesticStart/%s; +%s) Bot", curl_version()['version'], MAJESTIC_START_VERSION, ENVIRONMENT_ROOT));
+            curl_setopt($ch, CURLOPT_USERAGENT, user_agent());
             $xml = curl_exec($ch);
         }
 
@@ -99,7 +97,7 @@ class NewsAggregator
 
                 if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 403) {
                     // On 403 errors, try again with the user agent
-                    curl_setopt($ch, CURLOPT_USERAGENT, sprintf("curl/%s (MajesticStart/%s; +%s) Bot", curl_version()['version'], MAJESTIC_START_VERSION, ENVIRONMENT_ROOT));
+                    curl_setopt($ch, CURLOPT_USERAGENT, user_agent());
                     $html = curl_exec($ch);
                 }
 

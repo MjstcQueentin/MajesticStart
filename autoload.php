@@ -60,6 +60,15 @@ function model(string $name): MajesticStart\Database\DatabaseQuerier
 }
 
 /**
+ * Get the user agent string for the application.
+ * @return string The user agent string.
+ */
+function user_agent(): string
+{
+    return sprintf("curl/%s (MajesticStart/%s; +%s) Bot", curl_version()["version"], APPVERSION, config("rootUri"));
+}
+
+/**
  * Convert a timestamp to a human-readable string representing the time elapsed since the timestamp.
  * @param int $timestamp The timestamp to convert.
  * @param bool $shorter Whether to use shorter strings (e.g. "1h" instead of "1 hour").
