@@ -1,13 +1,13 @@
 <?php
-include(__DIR__ . "/../init.php");
-if (!SessionUtils::is_logged_in()) {
+include(__DIR__ . "/../autoload.php");
+if (!MajesticStart\Core\Session::isLoggedIn()) {
     http_response_code(307);
     header('Location: /login.php');
     return;
 }
 
 try {
-    $profile_picture = SessionUtils::profile_picture();
+    $profile_picture = MajesticStart\Core\Session::profilePicture();
 } catch (Exception $e) {
     $profile_picture = "";
 }
@@ -32,10 +32,10 @@ $newscategories = model('NewsCategoryModel')->select_all();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<?= TemplateEngine::head("Paramètres | Majestic Start") ?>
+<?= MajesticStart\View\TemplateEngine::head("Paramètres | Majestic Start") ?>
 
 <body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
-    <?= TemplateEngine::header("Paramètres") ?>
+    <?= MajesticStart\View\TemplateEngine::header("Paramètres") ?>
     <form class="d-flex flex-row" style="height: calc(100vh - 42px); max-height: calc(100vh - 42px);" action="settings.php" method="POST">
         <div class="col-4 h-100 overflow-auto border-end d-none d-md-block">
             <h3 class="my-4 mx-4">Paramètres</h3>
@@ -64,7 +64,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                         <div>
                             <p class="m-0 fs-5"><?= $_SESSION["user"]["name"] ?></p>
                             <p class="mb-1"><?= $_SESSION["user"]["primary_email"] ?></p>
-                            <a class="btn btn-sm btn-primary" href="<?= MAJESTICLOUD_USER_URI ?>">Gérer sur MajestiCloud <i class="bi bi-box-arrow-up-right"></i></a>
+                            <a class="btn btn-sm btn-primary" href="<?= config("majestiCloudFrontUri") ?>">Gérer sur MajestiCloud <i class="bi bi-box-arrow-up-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                     <button type="submit" class="btn btn-primary"><i class="bi bi-floppy2-fill"></i> Enregistrer</button>
                 </div>
             </div>
-            <?= TemplateEngine::footer() ?>
+            <?= MajesticStart\View\TemplateEngine::footer() ?>
             <script src="/assets/scripts/settings-bookmarks.js"></script>
             <script src="/assets/scripts/settings-news.js"></script>
         </div>

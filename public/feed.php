@@ -1,5 +1,5 @@
 <?php
-include(__DIR__ . "/../init.php");
+include(__DIR__ . "/../autoload.php");
 
 // If no category, redirect to the homepage
 if (empty($_GET["category"])) {
@@ -22,7 +22,7 @@ header('Cache-Control: max-age=3600');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<?= TemplateEngine::head($category["title_fr"] . " | Majestic Start") ?>
+<?= MajesticStart\View\TemplateEngine::head($category["title_fr"] . " | Majestic Start") ?>
 <style>
     #top {
         background-image: url('<?= $settings['photo_url'] ?>');
@@ -92,7 +92,7 @@ header('Cache-Control: max-age=3600');
 </style>
 
 <body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
-    <?= TemplateEngine::header() ?>
+    <?= MajesticStart\View\TemplateEngine::header() ?>
 
     <div class="px-5 py-3 bg-body-secondary">
         <nav aria-label="breadcrumb">
@@ -133,7 +133,7 @@ header('Cache-Control: max-age=3600');
         <?php endforeach; ?>
     </div>
 
-    <?= TemplateEngine::footer() ?>
+    <?= MajesticStart\View\TemplateEngine::footer() ?>
 </body>
 
 </html>

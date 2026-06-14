@@ -1,5 +1,5 @@
 <?php
-include(__DIR__ . "/../../init.php");
+include(__DIR__ . "/../../autoload.php");
 
 $id = $_GET["id"];
 if (empty($id)) {
@@ -13,7 +13,7 @@ if (empty($id)) {
     return;
 }
 
-if (SessionUtils::is_logged_in()) {
+if (MajesticStart\Core\Session::isLoggedIn()) {
     model("UserModel")->update_one($_SESSION["user_uuid"], [
         "set_searchengine" => $id
     ]);

@@ -1,14 +1,14 @@
 <?php
-include(__DIR__ . "/../init.php");
+include(__DIR__ . "/../autoload.php");
 
 $sources = model("NewsSourceModel")->select_all();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<?= TemplateEngine::head("Transparence de Majestic Start") ?>
+<?= MajesticStart\View\TemplateEngine::head("Transparence de Majestic Start") ?>
 
 <body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
-    <?= TemplateEngine::header() ?>
+    <?= MajesticStart\View\TemplateEngine::header() ?>
 
     <div class="px-5 py-3 bg-body-secondary">
         <nav aria-label="breadcrumb">
@@ -82,7 +82,7 @@ $sources = model("NewsSourceModel")->select_all();
 
     </section>
 
-    <?= TemplateEngine::footer() ?>
+    <?= MajesticStart\View\TemplateEngine::footer() ?>
 </body>
 
 </html>

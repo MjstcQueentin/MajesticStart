@@ -1,12 +1,12 @@
 <?php
-include(__DIR__ . "/../init.php");
+include(__DIR__ . "/../autoload.php");
 
 $settings = model('SettingModel')->select_all();
 $topics = model('TopicModel')->select_all(["is_official" => "DESC", "is_featured" => "DESC"]);
 $planned_event = model('PlannedEventModel')->select_today();
 $search_engines = model('SearchEngineModel')->select_all();
 
-if (SessionUtils::is_logged_in()) {
+if (MajesticStart\Core\Session::isLoggedIn()) {
     $user = model('UserModel')->select_one($_SESSION["user"]["uuid"]);
     $user["set_newscategories"] =  !empty($user["set_newscategories"]) ? json_decode($user["set_newscategories"]) : [];
 
@@ -23,7 +23,7 @@ if (SessionUtils::is_logged_in()) {
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<?= TemplateEngine::head("Majestic Start", ['/assets/stylesheets/index.css']) ?>
+<?= MajesticStart\View\TemplateEngine::head("Majestic Start", ['/assets/stylesheets/index.css']) ?>
 <style>
     #top {
         background-image: url('<?= !empty($planned_event) ? $planned_event['picture_url'] : $settings['photo_url'] ?>');
@@ -31,7 +31,7 @@ if (SessionUtils::is_logged_in()) {
 </style>
 
 <body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
-    <?= TemplateEngine::header() ?>
+    <?= MajesticStart\View\TemplateEngine::header() ?>
     <div id="top" class="shadow">
         <div></div>
         <div class="top-search-bar">
@@ -117,7 +117,7 @@ if (SessionUtils::is_logged_in()) {
         </div>
     </div>
 
-    <?php if (OpenWeatherMap::isConfigured()) : ?>
+    <?php if (MajesticStart\Libraries\OpenWeatherMap::isConfigured()) : ?>
         <div id="weather" class="my-4">
             <div class="ms-5 d-flex flex-row gap-4 align-items-baseline">
                 <div class="d-flex flex-row gap-4 align-items-center">
@@ -188,7 +188,7 @@ if (SessionUtils::is_logged_in()) {
                                         src="<?= htmlspecialchars($newsPost["newssource_logo_light"]) ?>"
                                         lightsrc="<?= htmlspecialchars($newsPost["newssource_logo_light"]) ?>"
                                         darksrc="<?= htmlspecialchars($newsPost["newssource_logo_dark"]) ?>"
-                                        alt="<?= $newsPiece["newssource_name"] ?>">
+                                        alt="<?= $newsPost["newssource_name"] ?>">
                                     <small
                                         class="text-body-secondary ms-1"
                                         aria-label="<?= to_ago_str(strtotime($newsPost["publication_date"])) ?>"
@@ -204,7 +204,7 @@ if (SessionUtils::is_logged_in()) {
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
-    <?= TemplateEngine::footer() ?>
+    <?= MajesticStart\View\TemplateEngine::footer() ?>
     <script>
         function refreshColorMode() {
             var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

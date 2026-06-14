@@ -1,9 +1,9 @@
 <?php
-include(__DIR__ . "/../../init.php");
+include(__DIR__ . "/../../autoload.php");
 
 header('Content-Type: application/json');
 
-if (!SessionUtils::is_logged_in()) {
+if (!MajesticStart\Core\Session::isLoggedIn()) {
     http_response_code(401);
     die;
 }
@@ -14,7 +14,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             "uuid" => null,
             "name" => $_POST["name"],
             "url" => $_POST["url"],
-            "icon" => BookmarkUtils::iconFrom($_POST["url"]),
+            "icon" => MajesticStart\Core\BookmarkUtils::iconFrom($_POST["url"]),
             "user_id" => $_SESSION["user_uuid"]
         ];
         $model = model('BookmarkModel');

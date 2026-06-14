@@ -1,7 +1,7 @@
 <?php
-include(__DIR__ . "/../../init.php");
+include(__DIR__ . "/../../autoload.php");
 
-if (!OpenWeatherMap::isConfigured()) {
+if (!MajesticStart\Libraries\OpenWeatherMap::isConfigured()) {
     http_response_code(500);
     exit;
 }
@@ -11,7 +11,7 @@ if (!isset($_GET["lat"]) || !isset($_GET["lon"])) {
     exit;
 }
 
-$forecast = OpenWeatherMap::getFiveDaysForecast($_GET["lat"], $_GET["lon"]);
+$forecast = MajesticStart\Libraries\OpenWeatherMap::getFiveDaysForecast($_GET["lat"], $_GET["lon"]);
 $return = [
     "city" => $forecast["city"]["name"],
     "country" => $forecast["city"]["country"],

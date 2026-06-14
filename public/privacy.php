@@ -1,12 +1,12 @@
 <?php
-include(__DIR__ . "/../init.php");
+include(__DIR__ . "/../autoload.php");
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-<?= TemplateEngine::head("La confidentialité sur Majestic Start") ?>
+<?= MajesticStart\View\TemplateEngine::head("La confidentialité sur Majestic Start") ?>
 
 <body data-bs-theme="<?= $_COOKIE['bs-theme'] ?? 'light' ?>">
-    <?= TemplateEngine::header() ?>
+    <?= MajesticStart\View\TemplateEngine::header() ?>
 
     <div class="px-5 py-3 bg-body-secondary">
         <nav aria-label="breadcrumb">
@@ -29,18 +29,18 @@ include(__DIR__ . "/../init.php");
     <section class="container my-5">
         <h3>Éditeur du service</h3>
         <p>
-            Cette instance de Majestic Start est éditée par <b><?= htmlspecialchars(WEBMASTER_NAME) ?></b>.<br>
-            <?= htmlspecialchars(WEBMASTER_LOCATION) ?><br>
-            Courriel : <?= htmlspecialchars(WEBMASTER_EMAIL) ?><br>
-            Téléphone : <?= htmlspecialchars(WEBMASTER_PHONE) ?>
+            Cette instance de Majestic Start est éditée par <b><?= htmlspecialchars(config("webmaster")["name"]) ?></b>.<br>
+            <?= htmlspecialchars(config("webmaster")["location"]) ?><br>
+            Courriel : <?= htmlspecialchars(config("webmaster")["email"]) ?><br>
+            Téléphone : <?= htmlspecialchars(config("webmaster")["phone"]) ?>
         </p>
     </section>
     <section class="container my-5">
         <h3>Hébergeur du service</h3>
-        <p>Cette instance de Majestic Start est hébergée par <b><?= htmlspecialchars(HOSTER_NAME) ?></b>.<br>
-            <?= htmlspecialchars(HOSTER_LOCATION) ?><br>
-            Courriel : <?= htmlspecialchars(HOSTER_EMAIL) ?><br>
-            Téléphone : <?= htmlspecialchars(HOSTER_PHONE) ?>
+        <p>Cette instance de Majestic Start est hébergée par <b><?= htmlspecialchars(config("hoster")["name"]) ?></b>.<br>
+            <?= htmlspecialchars(config("hoster")["location"]) ?><br>
+                Courriel : <?= htmlspecialchars(config("hoster")["email"]) ?><br>
+                    Téléphone : <?= htmlspecialchars(config("hoster")["phone"]) ?>
         </p>
     </section>
     <section class="container my-5">
@@ -111,7 +111,7 @@ include(__DIR__ . "/../init.php");
         <p>En France, conformément à la loi Informatique et Libertés du 6 janvier 1978 modifiée en 2004, vous bénéficiez d’un droit d’accès et de rectification aux informations qui vous concernent. Vous pouvez l'exercer en adressant une demande à contact@quentinpugeat.fr.</p>
         <p>Si vous constatez une violation de vos droits concernant vos données à caractère personnel, vous avez le droit d'introduire une réclamation auprès de la Commission Nationale de l'Informatique et des Libertés (www.cnil.fr). Cependant, tout sera mis en oeuvre pour répondre à vos demandes et réclamations, ainsi merci de bien vouloir me contacter en premier lieu avant de saisir la CNIL.</p>
     </section>
-    <?= TemplateEngine::footer() ?>
+    <?= MajesticStart\View\TemplateEngine::footer() ?>
 </body>
 
 </html>
