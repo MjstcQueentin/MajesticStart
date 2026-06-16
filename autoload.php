@@ -43,7 +43,7 @@ session_start([
 
 // Load config
 if (is_file(__DIR__ . "/config.ini")) {
-    MajesticStart\Config\Config::getInstance()->loadEnv(
+    MajesticStart\Config\Config::getInstance()->loadIni(
         __DIR__ . "/config.ini",
     );
 }
