@@ -50,8 +50,6 @@ class NewsAggregator
             file_put_contents($cache_link, $xml);
         }
 
-        curl_close($ch);
-
         $xmlObject = new SimpleXMLElement($xml, LIBXML_NOCDATA);
         $namespaces = $xmlObject->getNamespaces(true);
         foreach ($namespaces as $namespace => $nsSource) {
@@ -126,8 +124,6 @@ class NewsAggregator
                         }
                     }
                 }
-
-                curl_close($ch);
             }
 
             $transformed[] = [

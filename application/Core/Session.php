@@ -57,7 +57,6 @@ final class Session
         $response = json_decode($response, true);
         $_SESSION["token"] = $response["access_token"];
 
-        curl_close($ch);
         self::fetchUserData();
     }
 

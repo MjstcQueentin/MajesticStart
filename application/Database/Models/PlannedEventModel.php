@@ -17,8 +17,8 @@ final class PlannedEventModel extends DatabaseQuerier
      */
     public function select_today(): array
     {
-        $sql = "SELECT * FROM `planned_event` WHERE ? BETWEEN from_date AND until_date";
+        $sql = "SELECT * FROM `planned_event` WHERE from_date >= ? AND until_date <= ?";
 
-        return $this->db->select_query($sql, [date("md")], "fetch");
+        return $this->db->select_query($sql, [date("md"), date("md")]);
     }
 }

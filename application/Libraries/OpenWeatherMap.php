@@ -30,7 +30,7 @@ class OpenWeatherMap
      */
     public static function getFiveDaysForecast($lat, $lon, $lang = "fr"): array
     {
-        if (!$this->isConfigured()) {
+        if (!self::isConfigured()) {
             throw new Exception("OpenWeatherMap is not configured");
         }
 
@@ -48,7 +48,6 @@ class OpenWeatherMap
         if (curl_errno($ch) != 0) {
             throw new RuntimeException(curl_error($ch));
         }
-        curl_close($ch);
 
         $forecast = json_decode($chreturn, true);
 

@@ -31,7 +31,6 @@ class BookmarkUtils
             CURLOPT_FOLLOWLOCATION => true
         ]);
         $html = curl_exec($ch);
-        curl_close($ch);
 
         $page = new DOMDocument();
         @$page->loadHTML($html);
