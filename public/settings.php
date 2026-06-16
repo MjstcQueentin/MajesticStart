@@ -76,7 +76,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                     </p>
                     <?php foreach ($searchengines as $engine) : ?>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="set_searchengine" id="<?= $engine['uuid'] ?>-search-radio" value="<?= $engine['uuid'] ?>" <?php if ($user['set_searchengine'] == $engine['uuid']) echo 'checked' ?>>
+                            <input class="form-check-input" type="radio" name="set_searchengine" id="<?= $engine['uuid'] ?>-search-radio" value="<?= $engine['uuid'] ?>" required <?php if ($user['set_searchengine'] == $engine['uuid']) echo 'checked' ?>>
                             <label class="form-check-label" for="<?= $engine['uuid'] ?>-search-radio" style="vertical-align: super;">
                                 <img style="vertical-align: sub;" src="<?= $engine['icon'] ?>" alt="" height="16" width="16">
                                 <span class="ms-1"><?= $engine['name'] ?></span>
