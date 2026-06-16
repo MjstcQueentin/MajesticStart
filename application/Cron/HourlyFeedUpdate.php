@@ -37,9 +37,12 @@ class HourlyFeedUpdate extends CronTask
                 // Marquer la source comme étant en fonction
                 model("NewsFeedModel")->update_one($newsFeed["uuid"], ["access_ok" => 1]);
             } catch (Exception $ex) {
-                // En cas de problème avec un flux, marquer la source comme étant en panne
-                model("NewsFeedModel")->update_one($newsFeed["uuid"], ["access_ok" => 0]);
                 $this->log("error", $ex->getMessage());
+
+                if(get_class($ex) != "ErrorException") {
+                    // En cas de problème avec un flux, marquer la source comme étant en panne
+                    model("NewsFeedModel")->update_one($newsFeed["uuid"], ["access_ok" => 0]);
+                }
             }
         }
 
