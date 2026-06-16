@@ -4,7 +4,6 @@ namespace MajesticStart\Cron;
 
 use Exception;
 use MajesticStart\Core\NewsAggregator;
-use MajesticStart\Cron\CronTask;
 use MajesticStart\Database\DatabaseConnection;
 
 /**
@@ -16,6 +15,7 @@ class HourlyFeedUpdate extends CronTask
 {
     function __construct()
     {
+        parent::__construct();
         $this->cronTaskIdentifier = "hourly-feed-update";
     }
 
