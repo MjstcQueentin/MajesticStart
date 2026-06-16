@@ -10,7 +10,7 @@
 
 // Define constants
 define("APPVERSION", "5.0.0.0");
-define("WRITEPATH", realpath(__DIR__ . "/writable/"));
+define("WRITEPATH", realpath(__DIR__ . "/writable") . "/");
 
 // Load application files
 foreach (glob(__DIR__ . "/application/*/*.php") as $file) {
@@ -18,11 +18,13 @@ foreach (glob(__DIR__ . "/application/*/*.php") as $file) {
 }
 
 // Set exception and error handlers
-set_exception_handler(function ($ex) {
-    error_log("{$ex->getMessage()} in {$ex->getFile()}:{$ex->getLine()}");
-    http_response_code(500);
-    echo MajesticStart\View\TemplateEngine::error($ex->__toString());
-});
+if (php_sapi_name() != "cli") {
+    set_exception_handler(function ($ex) {
+        error_log("{$ex->getMessage()} in {$ex->getFile()}:{$ex->getLine()}");
+        http_response_code(500);
+        echo MajesticStart\View\TemplateEngine::error($ex->__toString());
+    });
+}
 
 set_error_handler(function (
     int $errno,
@@ -57,7 +59,7 @@ function config(string $key): mixed
 {
     $config = MajesticStart\Config\Config::getInstance();
 
-    return isset($config->$key) ? $config->$key : null;
+    return $config->getConfig($key);
 }
 
 /**

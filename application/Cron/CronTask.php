@@ -23,11 +23,11 @@ class CronTask
         $logFile = fopen($logFilePath, "a");
 
         $pid = getmypid();
-        $now = date("Y-m-d H:i:s");
+        $now = date("M j H:i:s");
         $message = str_replace(PHP_EOL, " ", $message);
         $level = strtoupper($level);
 
-        fwrite($logFile, date("Y-m-d H:i:s") . "[{$pid}] {$now} {$level}: {$message}" . PHP_EOL);
+        fwrite($logFile, "{$now} [{$pid}] [{$level}] {$message}" . PHP_EOL);
         fclose($logFile);
     }
 

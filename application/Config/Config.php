@@ -149,4 +149,19 @@ class Config
             $this->$key = $value;
         }
     }
+
+    /**
+     * Get a config value
+     *
+     * @param string $key
+     * @return string|bool|array|null The Config value or NULL if not found or the key doesn't exist.
+     */
+    public function getConfig(string $key): string|bool|array|null
+    {
+        if (!property_exists($this, $key)) {
+            return null;
+        }
+
+        return $this->$key;
+    }
 }

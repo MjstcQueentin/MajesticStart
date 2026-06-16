@@ -15,7 +15,6 @@ class HourlyFeedUpdate extends CronTask
 {
     function __construct()
     {
-        parent::__construct();
         $this->cronTaskIdentifier = "hourly-feed-update";
     }
 
