@@ -16,7 +16,7 @@ class OpenWeatherMap
      */
     public static function isConfigured(): bool
     {
-        return !empty(config("openWeatherMapApiKey"));
+        return !empty(config("openWeatherMap")["apiKey"]);
     }
 
     /**
@@ -38,7 +38,7 @@ class OpenWeatherMap
         $lat = urlencode($lat);
         $lon = urlencode($lon);
 
-        $ch = curl_init("https://api.openweathermap.org/data/2.5/forecast?lang=$lang&lat=$lat&lon=$lon&units=metric&appid=" . config("openWeatherMapApiKey"));
+        $ch = curl_init("https://api.openweathermap.org/data/2.5/forecast?lang=$lang&lat=$lat&lon=$lon&units=metric&appid=" . config("openWeatherMap")["apiKey"]);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FAILONERROR => true,

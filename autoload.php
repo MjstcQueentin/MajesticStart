@@ -24,7 +24,12 @@ set_exception_handler(function ($ex) {
     echo MajesticStart\View\TemplateEngine::error($ex->__toString());
 });
 
-set_error_handler(function (int $errno, string $errstr, ?string $errfile, ?int $errline) {
+set_error_handler(function (
+    int $errno,
+    string $errstr,
+    ?string $errfile,
+    ?int $errline,
+) {
     throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
 });
 
@@ -35,6 +40,13 @@ session_start([
     "cookie_httponly" => true,
     "cookie_samesite" => "Lax",
 ]);
+
+// Load config
+if (is_file(__DIR__ . "/config.ini")) {
+    MajesticStart\Config\Config::getInstance()->loadEnv(
+        __DIR__ . "/config.ini",
+    );
+}
 
 /**
  * Returns the value of the specified configuration key.
@@ -65,7 +77,12 @@ function model(string $name): MajesticStart\Database\DatabaseQuerier
  */
 function user_agent(): string
 {
-    return sprintf("curl/%s (MajesticStart/%s; +%s) Bot", curl_version()["version"], APPVERSION, config("rootUri"));
+    return sprintf(
+        "curl/%s (MajesticStart/%s; +%s) Bot",
+        curl_version()["version"],
+        APPVERSION,
+        config("rootUri"),
+    );
 }
 
 /**

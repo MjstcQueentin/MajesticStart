@@ -2,7 +2,7 @@
 include __DIR__ . "/../autoload.php";
 
 // When MajestiCloud is disabled, we redirect to the front page
-if (!config("majestiCloudEnabled")) {
+if (!config("majestiCloud")["enabled"]) {
     http_response_code(307);
     header("Location: /index.php");
     exit();
@@ -12,7 +12,7 @@ if (!isset($_GET["code"])) {
     // Redirect to MajesticCloud
 
     http_response_code(307);
-    header("Location: " . config("majestiCloudApiUri") . "/oauth/authorize.php?client_uuid=" . config("majestiCloudClientId") . "&redirect_uri=" . urlencode(config("rootUri") . "/login.php"));
+    header("Location: " . config("majestiCloud")["apiUri"] . "/oauth/authorize.php?client_uuid=" . config("majestiCloud")["clientId"] . "&redirect_uri=" . urlencode(config("rootUri") . "/login.php"));
 } else {
     // Get token
     MajesticStart\Core\Session::initSession($_GET["code"]);

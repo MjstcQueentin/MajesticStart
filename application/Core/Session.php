@@ -18,7 +18,7 @@ final class Session
     public static function isLoggedIn(): bool
     {
         // MajestiCloud must be enabled
-        if (!config("majestiCloudEnabled")) {
+        if (!config("majestiCloud")["enabled"]) {
             return false;
         }
 
@@ -35,14 +35,14 @@ final class Session
      */
     public static function initSession(string $code): void
     {
-        $ch = curl_init(config("majestiCloudApiUri") . "/oauth/token.php");
+        $ch = curl_init(config("majestiCloud")["apiUri"] . "/oauth/token.php");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => http_build_query([
                 "authorization_code" => $code,
-                "client_uuid" => config("majestiCloudClientId"),
-                "client_secret" => config("majestiCloudClientSecret"),
+                "client_uuid" => config("majestiCloud")["clientId"],
+                "client_secret" => config("majestiCloud")["clientSecret"],
             ]),
         ]);
 
@@ -66,7 +66,7 @@ final class Session
      */
     public static function fetchUserData(): void
     {
-        $ch = curl_init(config("majestiCloudApiUri") . "/user/");
+        $ch = curl_init(config("majestiCloud")["apiUri"] . "/user/");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPGET => true,
@@ -90,7 +90,7 @@ final class Session
      */
     public static function profilePicture(): string
     {
-        $ch = curl_init(config("majestiCloudApiUri") . "/user/profile_picture.php");
+        $ch = curl_init(config("majestiCloud")["apiUri"] . "/user/profile_picture.php");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPGET => true,
@@ -112,7 +112,7 @@ final class Session
      */
     public static function destroy(): void
     {
-        $ch = curl_init(config("majestiCloudApiUri") . "/session/current.php");
+        $ch = curl_init(config("majestiCloud")["apiUri"] . "/session/current.php");
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "DELETE",

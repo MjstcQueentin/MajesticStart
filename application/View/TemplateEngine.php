@@ -61,14 +61,14 @@ class TemplateEngine
      * @param string|null $title
      * @return string
      */
-    public static function header(?string $title)
+    public static function header(?string $title = null)
     {
         if (!isset($title)) {
             $title = datefmt_format(datefmt_create("fr-FR", IntlDateFormatter::FULL, IntlDateFormatter::NONE), new DateTime());
         }
 
         $account_menu = "";
-        if (!config("majestiCloudEnabled")) {
+        if (!config("majestiCloud")["enabled"]) {
             $account_menu = "<div></div>";
         } else {
             if (Session::isLoggedIn()) {

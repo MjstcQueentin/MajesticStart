@@ -22,7 +22,53 @@ Administrators may deploy it to their environment, but they should be aware that
   - [GD](https://www.php.net/manual/en/image.installation.php)
   - [Sessions](https://www.php.net/manual/en/session.installation.php)
 
-After deploying Start on your server, you will need to edit [config.php](./config/config.php) to make it work.
+## Configuration file
+
+After deploying Start on your server, you will need to create a configuration file with your own settings.
+
+Create a file at the project root (along autoload.php) called config.ini.
+
+Then, set the values for every Config variable you want to set.
+
+Any variable not set in the config.ini file will keep its default value. See default values and comments in application/Config/Config.php.
+
+DO NOT put your configuration values into Config.php as it is tracked by the source code versioning system. You may end up publishing your credentials. Ensure config.ini is in your .gitignore file and is ignored by whatever AI model you decide to use with this codebase.
+
+### Example
+
+```ini
+environment = "production"
+rootUri = "http://localhost/"
+
+[databaseCredentials]
+host = "localhost"
+user = "root"
+pwd = ""
+dbname = "start"
+
+[openWeatherMap]
+apiKey = ""
+
+[majestiCloud]
+enabled = false
+apiUri = ""
+frontUri = ""
+clientId = ""
+clientSecret = ""
+
+[webmaster]
+name = "John Doe"
+location = ""
+email = "webmaster@localhost"
+phone = ""
+
+[hoster]
+name = "John Doe"
+location = ""
+email = "hoster@localhost"
+phone = ""
+
+```
 
 ## License
 

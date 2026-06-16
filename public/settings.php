@@ -64,7 +64,7 @@ $newscategories = model('NewsCategoryModel')->select_all();
                         <div>
                             <p class="m-0 fs-5"><?= $_SESSION["user"]["name"] ?></p>
                             <p class="mb-1"><?= $_SESSION["user"]["primary_email"] ?></p>
-                            <a class="btn btn-sm btn-primary" href="<?= config("majestiCloudFrontUri") ?>">Gérer sur MajestiCloud <i class="bi bi-box-arrow-up-right"></i></a>
+                            <a class="btn btn-sm btn-primary" href="<?= config("majestiCloud")["frontUri"] ?>">Gérer sur MajestiCloud <i class="bi bi-box-arrow-up-right"></i></a>
                         </div>
                     </div>
                 </div>
