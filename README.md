@@ -16,7 +16,7 @@ Administrators may deploy it to their environment, but they should be aware that
 
 - A web server. nginx or httpd fit this purpose.
 - A MySQL Server. Using any other DBMS will require editing [the connection string](./database/DatabaseConnection.class.php).
-- PHP 8.1 with the following extensions:
+- PHP 8.4 with the following extensions:
   - [PDO](https://www.php.net/manual/en/ref.pdo-mysql.php)
   - [cURL](https://www.php.net/manual/en/curl.installation.php)
   - [GD](https://www.php.net/manual/en/image.installation.php)
