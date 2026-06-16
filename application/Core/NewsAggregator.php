@@ -112,7 +112,7 @@ class NewsAggregator
                         $image_src = $finder->evaluate('string(//img[contains(@class, "wp-post-image")]/@src)');
                     }
 
-                    if ($image_src === false) {
+                    if (empty($image_src)) {
                         // Image de secours
                         $image_src = "/assets/fallback-image.png";
                     } else {
