@@ -56,12 +56,16 @@ $sources = model("NewsSourceModel")->select_all();
                             <span class="ms-2">
                                 <?= htmlspecialchars($source['name']) ?>
                             </span>
-                            <span class="text-muted ms-2">
-                                <?= htmlspecialchars($source['address']) ?>
-                            </span>
-                            <a class="ms-2" href="<?= htmlspecialchars($source['website']) ?>">
-                                <?= htmlspecialchars($source['website']) ?>
-                            </a>
+                            <?php if(!empty($source['address'])): ?>
+                                <span class="text-muted ms-2">
+                                    <?= htmlspecialchars($source['address']) ?>
+                                </span>
+                            <?php endif; ?>
+                            <?php if(!empty($source['website'])): ?>
+                                <a class="ms-2" href="<?= htmlspecialchars($source['website']) ?>">
+                                    <?= htmlspecialchars($source['website']) ?>
+                                </a>
+                            <?php endif; ?>
                         </button>
                     </h2>
                     <div id="collapse<?= $index ?>" class="accordion-collapse collapse" data-bs-parent="#sourcesAccordion">
